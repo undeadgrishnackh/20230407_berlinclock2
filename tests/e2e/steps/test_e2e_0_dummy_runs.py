@@ -15,7 +15,7 @@ def give_a_developer(mocker):
 
 @when("he/she runs the tests", target_fixture="installer")
 def installer(capsys):
-    return_code = dummy.print_the_title()
+    return_code = dummy.berlin_clock()
     out, err = capsys.readouterr()
     return return_code, out.strip(), err.strip()
 
