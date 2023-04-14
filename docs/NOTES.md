@@ -2,25 +2,34 @@
 
 ## Pomodoro 1 🍅
 
-Goal: Complete the kata as much as possible, starting from create the clock compositiokn
+Goal: Complete the kata as much as possible, starting from create the clock composition
 
 - create the clock composition
   - clock composition string with everything is OFF --> midnight + 1sec => 00:00:01
 - second component
 
-## TECHDEBT:
-
-🚧 test boundaries(i.e. "00:00:60", "24:00:00", or "0:99:00", or "00:100:00", "aa:00:00)
-✅ parse the input of the timestamp once.
-🚧 Convert return of split_timestamp to tuple to improve readability
-🚧 Consistent name of component functions.
-
-
 ## Pomodoro 2 🍅
 
 - implement hours
 - clock composition for hours
-- 
-🚧 TECHDEBT:
-[ ] test boundaries("1:00:00", "24:00:00")
-[ ] test 01:00:01 => better to use different values (eg. "01:02:03")
+
+## Pomodoro 3 🍅
+
+Goal: creating the hour module with integration of the bottom and top row of the hour
+
+- ✅  Test with 5 AM
+- 🚧  Test with 8 PM
+
+- We should be agnostic of structure of the clock (bulbs, rows). Is it important to highlight the bulb or row?
+
+## Pomodoro 4
+
+- ✅  Test with 20:00:00 lights
+- ✅  Test with 06:00:01 lights
+
+## Pomodoro 5
+
+Goal: close the end to end test
+ - V bottom row minutes 00:01:01
+
+## Pomodoro 6

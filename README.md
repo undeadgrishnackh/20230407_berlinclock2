@@ -33,3 +33,4 @@ YYRYYRYYRYY
 YOOO
 
 Please check the example test cases for the required output format.
+
