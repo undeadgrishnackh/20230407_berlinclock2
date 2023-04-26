@@ -22,14 +22,21 @@ Goal: creating the hour module with integration of the bottom and top row of the
 
 - We should be agnostic of structure of the clock (bulbs, rows). Is it important to highlight the bulb or row?
 
-## Pomodoro 4
+## Pomodoro 4 🍅
+
+Goal: creating the hour module with integration of the bottom and top row of the hour
 
 - ✅  Test with 20:00:00 lights
 - ✅  Test with 06:00:01 lights
 
-## Pomodoro 5
+## Pomodoro 5 🍅
 
-Goal: close the end to end test
- - V bottom row minutes 00:01:01
-
-## Pomodoro 6
+Goal: minutes rows closing the end2end test
+- ✅  Test minutes bottom row with 00:01:01
+- ✅  Test minutes bottom row with 00:04:01
+- ✅  Test minutes bottom row with 00:05:01
+- ✅  Test minutes top row with 00:05:01 
+- ✅  Test minutes top row with 00:10:01
+- ✅  Test minutes top row with 00:15:01
+- ✅  Test minutes top row with 00:30:01
+- 🚧  Test minutes top row with 00:59:01

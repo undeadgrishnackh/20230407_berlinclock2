@@ -1,5 +1,3 @@
-import pytest
-
 from modules import berlin_clock
 
 
@@ -102,8 +100,21 @@ def describe_minutes_module():
         """🧪 should be 1 yellow light ON in the TOP ROW of minutes at 00:05:01"""
         assert berlin_clock.minutes_top_row(5) == "YOOOOOOOOOO"
 
-    # 10 mins YYOOOOOOOOO
-    # 15 mins YYROOOOOOOO
+    def should_be_2_yellow_lights_on_in_the_top_row_of_minutes_at_00_10_01():
+        """🧪 should be 2 yellow light ON in the TOP ROW of minutes at 00:10:01"""
+        assert berlin_clock.minutes_top_row(10) == "YYOOOOOOOOO"
+
+    def should_be_2_yellow_lights_and_1_red_on_in_the_top_row_of_minutes_at_00_15_01():
+        """🧪 should be 2 yellow light and 1 red ON in the TOP ROW of minutes at 00:15:01"""
+        assert berlin_clock.minutes_top_row(15) == "YYROOOOOOOO"
+
+    def should_be_2_yellow_lights_and_1_red_2_times_on_in_the_top_row_of_minutes_at_00_30_01():
+        """🧪 should be 2 yellow light and 1 red for two times ON in the TOP ROW of minutes at 00:30:01"""
+        assert berlin_clock.minutes_top_row(30) == "YYRYYROOOOO"
+
+    def should_be_all_on_in_the_top_row_of_minutes_at_00_59_01():
+        """🧪 should be all ON in the TOP ROW of minutes at 00:59:01"""
+        assert berlin_clock.minutes_top_row(59) == "YYRYYRYYRYY"
 
 
 def describe_split_hte_timestamp_in_hours_second_and_minutes():

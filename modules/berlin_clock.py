@@ -2,14 +2,14 @@
 def berlin_clock(timestamp: str):
     tokens = split_timestamp(timestamp)
     seconds = tokens.get("seconds")
-    # minutes = tokens.get("minutes")
+    minutes = tokens.get("minutes")
     hours = tokens.get("hours")
     return (
         f"{seconds_bulb(seconds)}\n"
         f"{hours_top_row(hours)}\n"
         f"{hours_bottom_row(hours)}\n"
-        f"OOOOOOOOOOO\n"
-        f"OOOO"
+        f"{minutes_top_row(minutes)}\n"
+        f"{minutes_bottom_row(minutes)}"
     )
 
 
@@ -38,4 +38,4 @@ def minutes_bottom_row(minutes: int):
 
 
 def minutes_top_row(minutes: int):
-    return minutes // 5 * "Y" + "OOOOOOOOOO"
+    return (minutes // 5 * "Y" + (11 - minutes // 5) * "O").replace("YYY", "YYR", -1)

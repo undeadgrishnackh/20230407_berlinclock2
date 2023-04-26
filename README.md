@@ -4,6 +4,14 @@
 
 The kata is from [CodeWars](https://www.codewars.com/kata/5a1463678ba9145a670000f9).
 
+## Handicap rules
+
+- Double loop (BDD - TDD) : E2E tests defined in gherkin 🥒 and then iterate in the internal loop via atomic ⚛️ unit tests.
+- CI/CD pipeline with GitHub Actions
+- local quality gate with linter, black, conventional commits, etc. 
+
+---
+
 ## Description
 
 The "Berlin Clock" is the first public clock in the world that tells the time by means of illuminated, coloured fields, for which it entered the Guinness Book of Records upon its installation on 17 June 1975.
@@ -32,5 +40,9 @@ RROO
 YYRYYRYYRYY
 YOOO
 
-Please check the example test cases for the required output format.
-
+### OUTPUT EFFECT
+        ⚫️
+🔴   🔴   ⚫ ️  ⚫️
+🔴   🔴   ⚫ ️  ⚫️
+🟡🟡🔴🟡🟡🔴🟡🟡🔴🟡🟡
+🟡   ⚫️   ⚫️    ⚫️

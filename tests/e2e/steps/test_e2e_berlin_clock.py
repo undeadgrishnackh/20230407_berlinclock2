@@ -14,14 +14,14 @@ def give_a_developer(mocker):
 
 @when("they look at the clock at 12:56:01", target_fixture="clock")
 def clock(capsys):
-    dysplay = berlin_clock("12:56:01")
+    display = berlin_clock("12:56:01")
     out, err = capsys.readouterr()
-    return dysplay, out.strip(), err.strip()
+    return display, out.strip(), err.strip()
 
 
 @then("light should be like O RROO RROO YYRYYRYYRYY YOOO")
 def then_the_title_is_printed(clock):
-    dysplay, out, err = clock
-    assert "O\nRROO\nRROO\nYYRYYRYYRYY\nYOOO" in dysplay
+    display, out, err = clock
+    assert "O\nRROO\nRROO\nYYRYYRYYRYY\nYOOO" in display
     assert out == ""
     assert err == ""
