@@ -41,7 +41,7 @@ YYRYYRYYRYY
 YOOO
 
 ### OUTPUT EFFECT
-        ⚫️
+        ⚫
 🔴   🔴   ⚫ ️  ⚫️
 🔴   🔴   ⚫ ️  ⚫️
 🟡🟡🔴🟡🟡🔴🟡🟡🔴🟡🟡
