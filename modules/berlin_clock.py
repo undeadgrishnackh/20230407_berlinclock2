@@ -1,9 +1,6 @@
 # pylint: disable=C0321
 def berlin_clock(timestamp: str):
-    tokens = split_timestamp(timestamp)
-    seconds = tokens.get("seconds")
-    minutes = tokens.get("minutes")
-    hours = tokens.get("hours")
+    hours, minutes, seconds = split_timestamp(timestamp)
     return (
         f"{seconds_bulb(seconds)}\n"
         f"{hours_top_row(hours)}\n"
@@ -11,6 +8,13 @@ def berlin_clock(timestamp: str):
         f"{minutes_top_row(minutes)}\n"
         f"{minutes_bottom_row(minutes)}"
     )
+
+
+def split_timestamp(timestamp):
+    hours = int(timestamp[:2])
+    minutes = int(timestamp[3:5])
+    seconds = int(timestamp[-2:])
+    return hours, minutes, seconds
 
 
 def seconds_bulb(seconds: int):
@@ -23,14 +27,6 @@ def hours_bottom_row(hours: int):
 
 def hours_top_row(hours: int):
     return hours // 5 * "R" + (4 - hours // 5) * "O"
-
-
-def split_timestamp(timestamp):
-    return {
-        "seconds": int(timestamp[-2:]),
-        "minutes": int(timestamp[3:5]),
-        "hours": int(timestamp[:2]),
-    }
 
 
 def minutes_bottom_row(minutes: int):

@@ -41,13 +41,15 @@ def describe_split_the_timestamp_in_hours_second_and_minutes():
     def should_split_the_time_in_hours_minutes_seconds():
         """🧪 should split the time in hours, minutes, seconds"""
         timestamp = "01:02:03"
-        assert berlin_clock.split_timestamp(timestamp).get("seconds") == 3
-        assert berlin_clock.split_timestamp(timestamp).get("minutes") == 2
-        assert berlin_clock.split_timestamp(timestamp).get("hours") == 1
+        hours, minutes, seconds = berlin_clock.split_timestamp(timestamp)
+        assert seconds == 3
+        assert minutes == 2
+        assert hours == 1
 
     def should_split_the_time_with_2_digits():
         """🧪 should split the time with 2 digits"""
         timestamp = "23:59:58"
-        assert berlin_clock.split_timestamp(timestamp).get("seconds") == 58
-        assert berlin_clock.split_timestamp(timestamp).get("minutes") == 59
-        assert berlin_clock.split_timestamp(timestamp).get("hours") == 23
+        hours, minutes, seconds = berlin_clock.split_timestamp(timestamp)
+        assert seconds == 58
+        assert minutes == 59
+        assert hours == 23

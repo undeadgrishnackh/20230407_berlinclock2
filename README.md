@@ -39,10 +39,3 @@ RROO
 RROO
 YYRYYRYYRYY
 YOOO
-
-### OUTPUT EFFECT
-        ⚫
-🔴   🔴   ⚫ ️  ⚫️
-🔴   🔴   ⚫ ️  ⚫️
-🟡🟡🔴🟡🟡🔴🟡🟡🔴🟡🟡
-🟡   ⚫️   ⚫️    ⚫️

@@ -9,7 +9,7 @@ More the code, more are the debts. Keep here which kind of debts were being made
 ✅ parse the input of the timestamp once.
 🚧 Convert return of split_timestamp to tuple to improve readability
 🚧 Consistent name 
-[ ] Return of timestamp split is not readable as it should be.
+✅ Return of timestamp split is not readable as it should be.
 ✅Remove duplication of code for timestamp splitting
 [ ] test boundaries("1:00:00", "24:00:00")
 [ ] test 01:00:01 => better to use different values (eg. "01:02:03")
