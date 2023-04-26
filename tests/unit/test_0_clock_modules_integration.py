@@ -1,4 +1,7 @@
+import pytest
+
 from modules import berlin_clock
+from modules.berlin_clock import TimeFormatException
 
 
 def describe_berlin_cloack_modules_composition_second_bulb_hours_minute():
@@ -53,3 +56,33 @@ def describe_split_the_timestamp_in_hours_second_and_minutes():
         assert seconds == 58
         assert minutes == 59
         assert hours == 23
+
+
+def describe_guardians_to_prevent_strange_time_coming_in():
+    """📂 Guardians to prevent strange time coming in"""
+
+    def should_raise_an_exception_if_the_time_isnt_a_string():
+        """🧪 should raise an exception if the time isn't a string"""
+        try:
+            berlin_clock.berlin_clock(123)
+            assert False
+        except TimeFormatException as error_message:
+            assert str(error_message) == "The time must be a string"
+
+    wrong_timestamp = [
+        ("123:00:00", "The time must be a string in the format 24HH:MM:ss"),
+        ("23:62:00", "The time must be a string in the format 24HH:MM:ss"),
+        ("12:00:99", "The time must be a string in the format 24HH:MM:ss"),
+        ("HH:MM:ss", "The time must be a string in the format 24HH:MM:ss"),
+    ]
+
+    @pytest.mark.parametrize("timestamp,expected_error_message", wrong_timestamp)
+    def should_raise_an_exception_if_the_time_isnt_in_the_format_hh_mm_ss(
+        timestamp, expected_error_message
+    ):
+        """🧪 should raise an exception if the time isn't in the format HH:MM:ss"""
+        try:
+            berlin_clock.berlin_clock(timestamp)
+            assert False
+        except TimeFormatException as error_message:
+            assert str(error_message) == expected_error_message

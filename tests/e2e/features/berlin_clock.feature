@@ -7,8 +7,3 @@ Feature: Berlin Clock
     Given an user in front of the Berlin Clock
     When they look at the clock at 12:56:01
     Then light should be like O RROO RROO YYRYYRYYRYY YOOO
-    #            ⚫️
-    #    🔴   🔴   ⚫ ️  ⚫️
-    #    🔴   🔴   ⚫ ️  ⚫️
-    #    🟡🟡🔴🟡🟡🔴🟡🟡🔴🟡🟡
-    #    🟡   ⚫️   ⚫️    ⚫️

@@ -1,5 +1,9 @@
 # pylint: disable=C0321
+import re
+
+
 def berlin_clock(timestamp: str):
+    check_timestamp(timestamp)
     hours, minutes, seconds = split_timestamp(timestamp)
     return (
         f"{seconds_bulb(seconds)}\n"
@@ -8,6 +12,19 @@ def berlin_clock(timestamp: str):
         f"{minutes_top_row(minutes)}\n"
         f"{minutes_bottom_row(minutes)}"
     )
+
+
+def check_timestamp(timestamp):
+    if not isinstance(timestamp, str):
+        raise TimeFormatException("The time must be a string")
+    regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
+    pattern = re.compile(regex)
+    if not re.search(pattern, timestamp):
+        raise TimeFormatException("The time must be a string in the format 24HH:MM:ss")
+
+
+class TimeFormatException(Exception):
+    """The time must be a string in the format HH:MM:SS - anything else is not allowed"""
 
 
 def split_timestamp(timestamp):
