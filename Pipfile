@@ -32,6 +32,8 @@ jsonpath-ng = "*"
 click = "*"
 update = "*"
 inquirer = "*"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
 
 [requires]
 python_version = "3"
@@ -50,3 +52,5 @@ watchUnit = "ptw tests/unit -- --cov-report term --cov='.' --tb=long -l"
 watchIntegration = "ptw tests/integration -- --cov-report term --cov='.' --tb=long -l"
 install_pre_hooks = "pre-commit install"
 linterCheck = "pylint -f msvs modules"
+testReport = "pytest --html=htmlReport/report.html"
+

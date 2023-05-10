@@ -2,7 +2,7 @@
 import re
 
 
-def berlin_clock(timestamp: str):
+def berlin_clock(timestamp: str) -> str:
     check_timestamp(timestamp)
     hours, minutes, seconds = split_timestamp(timestamp)
     return (

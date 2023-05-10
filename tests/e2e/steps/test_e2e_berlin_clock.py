@@ -1,5 +1,3 @@
-import sys
-
 from pytest_bdd import given, when, then, scenarios
 
 from modules.berlin_clock import berlin_clock
@@ -8,7 +6,7 @@ scenarios("../features/berlin_clock.feature")
 
 
 @given("an user in front of the Berlin Clock")
-def give_a_developer(mocker):
+def give_an_user_in_front_of_the_berlin_clock(mocker):
     mocker.resetall()
 
 
@@ -20,7 +18,7 @@ def clock(capsys):
 
 
 @then("light should be like O RROO RROO YYRYYRYYRYY YOOO")
-def then_the_title_is_printed(clock):
+def then_the_light_should_be_indicating12_56_01(clock):
     display, out, err = clock
     assert "O\nRROO\nRROO\nYYRYYRYYRYY\nYOOO" in display
     assert out == ""
