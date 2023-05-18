@@ -1,4 +1,8 @@
-openapi: 3.0.1
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/undeadgrishnackh74/berlinClock/1.0.0
 info:
   description: This is the definition of the Berlin Clock API
   version: 1.0.0
@@ -8,8 +12,6 @@ info:
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
-servers:
-  - url: "https://virtserver.swaggerhub.com/undeadgrishnackh74/berlinClock/1.0.0"
 paths:
   /getTime:
     get:
@@ -36,7 +38,7 @@ paths:
                 application/json:
                   value:
                     time: "13:56:01"
-                    seconds: "Y"
+                    seconds: "O"
                     hours:
                       top: "RROO"
                       bottom: "RRRO"
@@ -70,7 +72,7 @@ components:
           example: "13:56:01"
         seconds:
           type: string
-          example: "Y"
+          example: "O"
         hours:
           $ref: '#/components/schemas/Hours'
         minutes:

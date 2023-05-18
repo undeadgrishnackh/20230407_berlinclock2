@@ -1,7 +1,10 @@
 import pytest
-from pytest_bdd import given, when, then, scenarios
 
 import requests
+
+from modules.api import berlin_clock
+
+timestamp = "13:56:01"
 
 
 def describe_contract_test_to_ensure_the_api_dictionary_is_as_expected():
@@ -15,7 +18,6 @@ def describe_contract_test_to_ensure_the_api_dictionary_is_as_expected():
             "https://virtserver.swaggerhub.com/undeadgrishnackh74/berlinClock"
         )
         parameter_name = "timestamp"
-        timestamp = "13:56:01"
         return requests.get(
             f"{base_url_swagger_mock}/{api_version}/{api_name}?{parameter_name}={timestamp}"
         )
@@ -31,9 +33,23 @@ def describe_contract_test_to_ensure_the_api_dictionary_is_as_expected():
     ):
         """🔌🎭 should find the right JSON schema for the berlin clock get time ver. 1.0.0"""
         json_data = response_berlin_clock_api_dictionary_v1_0_0.json()
-        assert json_data[0]["time"] == "13:56:01"
-        assert json_data[0]["seconds"] == "Y"
-        assert json_data[0]["hours"]["top"] == "RROO"
-        assert json_data[0]["hours"]["bottom"] == "RRRO"
-        assert json_data[0]["minutes"]["top"] == "YYRYYRYYRYY"
-        assert json_data[0]["minutes"]["bottom"] == "YOOO"
+        assert json_data["time"] == "13:56:01"
+        assert json_data["seconds"] == "O"
+        assert json_data["hours"]["top"] == "RROO"
+        assert json_data["hours"]["bottom"] == "RRRO"
+        assert json_data["minutes"]["top"] == "YYRYYRYYRYY"
+        assert json_data["minutes"]["bottom"] == "YOOO"
+
+
+def describe_contract_test_to_ensure_that_the_api_developed_is_like_the_contract_above():
+    """📂 contract test to ensure that the API developed is like the contract above"""
+
+    def should_find_the_same_reply_as_for_the_berlin_clock_get_time_v_1_0_0_contract():
+        """🔌🎭 should find the right JSON schema for the berlin clock get time ver. 1.0.0"""
+        response_berlin_clock_api = berlin_clock.get_berlin_clock(timestamp)
+        assert response_berlin_clock_api.get("time") == "13:56:01"
+        assert response_berlin_clock_api.get("seconds") == "O"
+        assert response_berlin_clock_api.get("hours").get("top") == "RROO"
+        assert response_berlin_clock_api.get("hours").get("bottom") == "RRRO"
+        assert response_berlin_clock_api.get("minutes").get("top") == "YYRYYRYYRYY"
+        assert response_berlin_clock_api.get("minutes").get("bottom") == "YOOO"
