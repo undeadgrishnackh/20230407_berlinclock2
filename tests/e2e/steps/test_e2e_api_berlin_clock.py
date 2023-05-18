@@ -12,14 +12,15 @@ def give_an_user_asks_the_berlin_clock_api(mocker):
 
 @when("they look at the clock at 13:36:01", target_fixture="api_clock")
 def api_clock():
-    return berlin_clock.api("13:36:01")
+    return berlin_clock.get_berlin_clock("13:36:01")
 
 
 @then("the API should say it's O RROO RRRO YYRYYRYOOOO YOOO")
 def step_impl(api_clock):
     payload = api_clock
+    assert payload.get("time") == "13:36:01"
     assert payload.get("seconds") == "O"
     assert payload.get("hours").get("top") == "RROO"
-    assert payload.get("hours").get("bottom") == "RRrO"
+    assert payload.get("hours").get("bottom") == "RRRO"
     assert payload.get("minutes").get("top") == "YYRYYRYOOOO"
     assert payload.get("minutes").get("bottom") == "YOOO"

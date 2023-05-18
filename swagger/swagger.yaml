@@ -1,128 +1,113 @@
-{
-  "swagger" : "2.0",
-  "info" : {
-    "description" : "This is the definition of the Berlin Clock API",
-    "version" : "1.0.0",
-    "title" : "Berlin Clock API",
-    "contact" : {
-      "email" : "undeadgrishnackh@gmail.com"
-    },
-    "license" : {
-      "name" : "Apache 2.0",
-      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
-  },
-  "host" : "virtserver.swaggerhub.com",
-  "basePath" : "/undeadgrishnackh74/berlinClock/1.0.0",
-  "tags" : [ {
-    "name" : "admins",
-    "description" : "Secured Admin-only calls"
-  }, {
-    "name" : "developers",
-    "description" : "Operations available to regular developers"
-  } ],
-  "schemes" : [ "https" ],
-  "paths" : {
-    "/getTime" : {
-      "get" : {
-        "tags" : [ "developers" ],
-        "summary" : "get the berlin clock time",
-        "description" : "By passing in the time (24HH:MM:ss) in the query string, you can get the berlin clock time.\n",
-        "operationId" : "getTime",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "timestamp",
-          "in" : "query",
-          "description" : "timestamp in 24 hours format HH:MM:ss",
-          "required" : true,
-          "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "berlin clock time",
-            "schema" : {
-              "type" : "object",
-              "items" : {
-                "$ref" : "#/definitions/BerlinClockTime"
-              }
-            }
-          },
-          "400" : {
-            "description" : "bad input parameter",
-            "schema" : {
-              "type" : "object",
-              "items" : {
-                "$ref" : "#/definitions/BerlinClockError"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "definitions" : {
-    "BerlinClockTime" : {
-      "type" : "object",
-      "required" : [ "hours", "minutes", "seconds", "time" ],
-      "properties" : {
-        "time" : {
-          "type" : "string",
-          "format" : "date-time",
-          "example" : "13:56:01"
-        },
-        "seconds" : {
-          "type" : "string",
-          "example" : "Y"
-        },
-        "hours" : {
-          "$ref" : "#/definitions/Hours"
-        },
-        "minutes" : {
-          "$ref" : "#/definitions/Minutes"
-        }
-      }
-    },
-    "Hours" : {
-      "type" : "object",
-      "required" : [ "bottom", "top" ],
-      "properties" : {
-        "top" : {
-          "type" : "string",
-          "example" : "RROO"
-        },
-        "bottom" : {
-          "type" : "string",
-          "example" : "RRRO"
-        }
-      }
-    },
-    "Minutes" : {
-      "type" : "object",
-      "required" : [ "bottom", "top" ],
-      "properties" : {
-        "top" : {
-          "type" : "string",
-          "example" : "YYRYYRYYRYY"
-        },
-        "bottom" : {
-          "type" : "string",
-          "example" : "YOOO"
-        }
-      }
-    },
-    "BerlinClockError" : {
-      "type" : "object",
-      "required" : [ "error_message", "time" ],
-      "properties" : {
-        "time" : {
-          "type" : "string",
-          "example" : "12.34.56"
-        },
-        "error_message" : {
-          "type" : "string",
-          "example" : "The time must be in the format 24HH:MM:ss"
-        }
-      }
-    }
-  }
-}
+openapi: 3.0.1
+info:
+  description: This is the definition of the Berlin Clock API
+  version: 1.0.0
+  title: Berlin Clock API
+  contact:
+    email: undeadgrishnackh@gmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: "https://virtserver.swaggerhub.com/undeadgrishnackh74/berlinClock/1.0.0"
+paths:
+  /getTime:
+    get:
+      tags:
+        - developers
+      summary: Get the Berlin clock time
+      description: By passing in the time (24HH:MM:ss) in the query string, you can get the Berlin clock time.
+      operationId: getTime
+      parameters:
+        - in: query
+          name: timestamp
+          description: timestamp in 24 hours format HH:MM:ss
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Berlin clock time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BerlinClockTime'
+              examples:
+                application/json:
+                  value:
+                    time: "13:56:01"
+                    seconds: "Y"
+                    hours:
+                      top: "RROO"
+                      bottom: "RRRO"
+                    minutes:
+                      top: "YYRYYRYYRYY"
+                      bottom: "YOOO"
+        '400':
+          description: Bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BerlinClockError'
+              examples:
+                application/json:
+                  value:
+                    time: "12.34.56"
+                    error_message: "The time must be in the format 24HH:MM:ss"
+components:
+  schemas:
+    BerlinClockTime:
+      type: object
+      required:
+        - time
+        - seconds
+        - hours
+        - minutes
+      properties:
+        time:
+          type: string
+          format: date-time
+          example: "13:56:01"
+        seconds:
+          type: string
+          example: "Y"
+        hours:
+          $ref: '#/components/schemas/Hours'
+        minutes:
+          $ref: '#/components/schemas/Minutes'
+    Hours:
+      type: object
+      required:
+        - bottom
+        - top
+      properties:
+        top:
+          type: string
+          example: "RROO"
+        bottom:
+          type: string
+          example: "RRRO"
+    Minutes:
+      type: object
+      required:
+        - bottom
+        - top
+      properties:
+        top:
+          type: string
+          example: "YYRYYRYYRYY"
+        bottom:
+          type: string
+          example: "YOOO"
+    BerlinClockError:
+      type: object
+      required:
+        - error_message
+        - time
+      properties:
+        time:
+          type: string
+          example: "12.34.56"
+        error_message:
+          type: string
+          example: "The time must be in the format 24HH:MM:ss"

@@ -1,5 +1,9 @@
 from typing import Dict
+from fastapi import FastAPI
+
+app = FastAPI()
 
 
-def api(timestamp) -> Dict:
+@app.get("/berlin_clock")
+def get_berlin_clock(timestamp: str) -> Dict:
     return {"time": timestamp}

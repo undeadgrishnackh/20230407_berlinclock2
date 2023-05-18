@@ -165,3 +165,6 @@ requirements.txt*
 
 # chrome web driver
 downloaded_files/
+
+# pytest coverage
+htmlcov/
