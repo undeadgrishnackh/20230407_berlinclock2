@@ -1,7 +1,34 @@
+import inspect
+
 import pytest
 from fastapi import HTTPException
 
 from modules.api import berlin_clock as api_connector
+
+
+def describe_check_the_api_configuration():
+    """📂 check the API configuration"""
+
+    def should_know_the_api_version():
+        """🧪 should know the API version is 1.0.0"""
+        assert api_connector._API_VERSION == "1.0.0"
+
+    def should_know_the_api_name():
+        """🧪 should know the api name is getTime"""
+        assert api_connector._API_NAME == "getTime"
+
+    def should_know_the_name_of_the_api_parameter_is_timestamp():
+        """🧪 should know the name of the api parameter is 'timestamp'"""
+        signature = inspect.signature(api_connector.berlin_clock_api)
+        api_parameter = list(signature.parameters.keys())
+        assert "timestamp" in api_parameter, "The input parameter must be 'timestamp'"
+
+    def should_know_the_type_of_the_api_parameter_is_string():
+        """🧪 should know the type of the api parameter is 'string'"""
+        signature = inspect.signature(api_connector.berlin_clock_api)
+        api_parameter = list(signature.parameters.keys())
+        api_parameter_info = signature.parameters["timestamp"]
+        assert api_parameter_info.annotation == str, "'timestamp' must be annotated as a string"
 
 
 def describe_the_api_connector_must_enforce_input_and_output_standards():

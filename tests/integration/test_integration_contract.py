@@ -1,10 +1,18 @@
-import pytest
+import os
+import signal
+import socket
+import subprocess
+import time
 
+import pytest
 import requests
 
 from modules.api import berlin_clock
 
 timestamp = "13:56:01"
+api_version = "1.0.0"
+api_name = "getTime"
+parameter_name = "timestamp"
 
 
 def describe_contract_test_to_ensure_the_api_dictionary_is_as_expected():
@@ -12,10 +20,7 @@ def describe_contract_test_to_ensure_the_api_dictionary_is_as_expected():
 
     @pytest.fixture
     def response_berlin_clock_api_dictionary_v1_0_0():
-        api_version = "1.0.0"
-        api_name = "getTime"
         base_url_swagger_mock = "https://virtserver.swaggerhub.com/undeadgrishnackh74/berlinClock"
-        parameter_name = "timestamp"
         return requests.get(f"{base_url_swagger_mock}/{api_version}/{api_name}?{parameter_name}={timestamp}")
 
     def should_find_the_api_dictionary_definition_for_the_get_time_v1_0_0(
@@ -54,11 +59,60 @@ def describe_contract_test_to_ensure_that_the_api_developed_is_like_the_contract
 def describe_integration_test_to_ensure_the_api_exposed_on_localhost_is_the_same_as_in_the_contract_above():
     """📂 integration test to ensure the API exposed on localhost is the same as in the OPEN API specs"""
 
-    def should_call_the_api_on_localhost_as_for_the_contract_ver_1_0_0():
+    def should_call_the_api_on_localhost_as_for_the_contract_ver_1_0_0(capsys):
         """🔌 should call the api on localhost as for the contract ver. 1.0.0"""
+        stdout, stderr, returncode, params = call_the_ci_berlin_clock_api("12:12:12")
 
-        # launch the api in the background
+        assert returncode == 0
+        assert "./scripts/test_integration_api.sh" in params
+        assert "200 OK" in stdout
+        assert (
+            '{"time":"12:12:12","seconds":"Y","hours":{"top":"RROO","bottom":"RROO"},"minutes":{"top":"YYOOOOOOOOO","bottom":"YYOO"}}'
+            in stdout
+        )
+        assert "Shutting down" in stderr
+        assert "Finished server process" in stderr
 
-        # curl the API
+    def should_get_a_400_and_an_error_message_for_wrong_time():
+        """🔌 should get a 400 and an error message for wrong time"""
+        stdout, stderr, returncode, params = call_the_ci_berlin_clock_api("99:99:99")
 
-        # check the reply
+        assert returncode == 0
+        assert "./scripts/test_integration_api.sh" in params
+        assert "400 Bad Request" in stdout
+        assert '{"detail":"Invalid time format. Please provide the time in 24HH:MM:ss' in stdout
+        assert "Shutting down" in stderr
+        assert "Finished server process" in stderr
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------
+### UTILITY to set up the integration tests
+
+
+def find_unused_port():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("localhost", 0))
+        return s.getsockname()[1]
+
+
+def call_the_ci_berlin_clock_api(timestamp):
+    berlin_clock_ci_api_server_port = find_unused_port()
+    command_to_run = f"./scripts/test_integration_api.sh {berlin_clock_ci_api_server_port} {timestamp}"
+
+    command_executed = subprocess.run(
+        command_to_run,
+        capture_output=True,
+        text=True,
+        shell=True,
+        check=True,
+        timeout=10,
+    )
+    stdout = command_executed.stdout
+    stderr = command_executed.stderr
+    returncode = command_executed.returncode
+    params = command_executed.args
+
+    return stdout, stderr, returncode, params

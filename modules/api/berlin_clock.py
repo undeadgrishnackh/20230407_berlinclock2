@@ -7,8 +7,11 @@ from modules.berlin_clock import TimeFormatException
 
 app = FastAPI()
 
+_API_VERSION = "1.0.0"
+_API_NAME = "getTime"
 
-@app.get("/getTime")
+
+@app.get(f"/{_API_VERSION}/{_API_NAME}")
 def berlin_clock_api(timestamp: str) -> Dict:
     try:
         return {"time": timestamp, **convert_berlin_clock_string_into_json(berlin_clock.berlin_clock(timestamp))}
