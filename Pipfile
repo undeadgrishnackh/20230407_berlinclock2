@@ -52,5 +52,6 @@ watchUnit = "ptw tests/unit -- --cov-report term --cov='.' --tb=long -l"
 watchIntegration = "ptw tests/integration -- --cov-report term --cov='.' --tb=long -l"
 install_pre_hooks = "pre-commit install"
 linterCheck = "pylint -f msvs modules"
-testReport = "pytest --html=htmlReport/report.html"
+testReportHtml = "pytest --html=htmlReport/report.html"
+testReportHtmlCoverage = "pytest --cov=modules --cov-report term --cov-report html:coverage_html_report --html=htmlReport/report.html --self-contained-html"
 

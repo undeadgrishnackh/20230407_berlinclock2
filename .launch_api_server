@@ -1,0 +1,1 @@
+pipenv shell 'uvicorn modules.api.berlin_clock:app --reload'

@@ -3,7 +3,208 @@
   <head>
     <meta charset="utf-8"/>
     <title>Test Report</title>
-    <link href="assets/style.css" rel="stylesheet" type="text/css"/></head>
+    <style>body {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 12px;
+	/* do not increase min-width as some may use split screens */
+	min-width: 800px;
+	color: #999;
+}
+
+h1 {
+	font-size: 24px;
+	color: black;
+}
+
+h2 {
+	font-size: 16px;
+	color: black;
+}
+
+p {
+    color: black;
+}
+
+a {
+	color: #999;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+/******************************
+ * SUMMARY INFORMATION
+ ******************************/
+
+#environment td {
+	padding: 5px;
+	border: 1px solid #E6E6E6;
+}
+
+#environment tr:nth-child(odd) {
+	background-color: #f6f6f6;
+}
+
+/******************************
+ * TEST RESULT COLORS
+ ******************************/
+span.passed, .passed .col-result {
+	color: green;
+}
+span.skipped, span.xfailed, span.rerun, .skipped .col-result, .xfailed .col-result, .rerun .col-result {
+	color: orange;
+}
+span.error, span.failed, span.xpassed, .error .col-result, .failed .col-result, .xpassed .col-result  {
+	color: red;
+}
+
+
+/******************************
+ * RESULTS TABLE
+ *
+ * 1. Table Layout
+ * 2. Extra
+ * 3. Sorting items
+ *
+ ******************************/
+
+/*------------------
+ * 1. Table Layout
+ *------------------*/
+
+#results-table {
+	border: 1px solid #e6e6e6;
+	color: #999;
+	font-size: 12px;
+	width: 100%
+}
+
+#results-table th, #results-table td {
+	padding: 5px;
+	border: 1px solid #E6E6E6;
+	text-align: left
+}
+#results-table th {
+	font-weight: bold
+}
+
+/*------------------
+ * 2. Extra
+ *------------------*/
+
+.log:only-child {
+	height: inherit
+}
+.log {
+	background-color: #e6e6e6;
+	border: 1px solid #e6e6e6;
+	color: black;
+	display: block;
+	font-family: "Courier New", Courier, monospace;
+	height: 230px;
+	overflow-y: scroll;
+	padding: 5px;
+	white-space: pre-wrap
+}
+div.image {
+	border: 1px solid #e6e6e6;
+	float: right;
+	height: 240px;
+	margin-left: 5px;
+	overflow: hidden;
+	width: 320px
+}
+div.image img {
+	width: 320px
+}
+.collapsed {
+	display: none;
+}
+.expander::after {
+	content: " (show details)";
+	color: #BBB;
+	font-style: italic;
+	cursor: pointer;
+}
+.collapser::after {
+	content: " (hide details)";
+	color: #BBB;
+	font-style: italic;
+	cursor: pointer;
+}
+
+/*------------------
+ * 3. Sorting items
+ *------------------*/
+.sortable {
+	cursor: pointer;
+}
+
+.sort-icon {
+	font-size: 0px;
+	float: left;
+	margin-right: 5px;
+	margin-top: 5px;
+	/*triangle*/
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+}
+
+.inactive .sort-icon {
+	/*finish triangle*/
+	border-top: 8px solid #E6E6E6;
+}
+
+.asc.active .sort-icon {
+	/*finish triangle*/
+	border-bottom: 8px solid #999;
+}
+
+.desc.active .sort-icon {
+	/*finish triangle*/
+	border-top: 8px solid #999;
+}
+
+/******************************
+ * CUSTOM CSS
+ * /Users/michele.brissoni/.local/share/virtualenvs/20230407_berlinclock2-wxp0eHfK/lib/python3.11/site-packages/pytest_bdd_html/resources/style.css
+ ******************************/
+
+#results-table {
+    width: 100%;
+}
+
+.col-description h3 {
+    margin: 0 0 .2em;
+    color: indigo;
+}
+
+.col-description .step > .step-name {
+    color: goldenrod;
+    font-weight: bold;
+    margin-right: .5em;
+}
+
+.col-description .step {
+    margin-bottom: .3em;
+}
+
+.col-description .text {
+    margin-bottom: 1.5em;
+}
+
+.col-description .func-doc {
+    white-space: pre-wrap;
+    margin: 0;
+}
+
+.col-description .step-is-and {
+    margin-left: 1em;
+}
+</style></head>
   <body onLoad="init()">
     <script>/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
@@ -241,7 +442,7 @@ function filter_table(elem) {
 }
 </script>
     <h1>report.html</h1>
-    <p>Report generated on 10-May-2023 at 15:42:57 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v2.0.1</p>
+    <p>Report generated on 19-May-2023 at 13:50:32 by <a href="https://pypi.python.org/pypi/pytest-html">pytest-html</a> v2.0.1</p>
     <h2>Environment</h2>
     <table id="environment">
       <tr>
@@ -255,13 +456,13 @@ function filter_table(elem) {
         <td>macOS-13.2.1-arm64-arm-64bit</td></tr>
       <tr>
         <td>Plugins</td>
-        <td>{&apos;html&apos;: &apos;2.0.1&apos;, &apos;pspec&apos;: &apos;0.0.4&apos;, &apos;seleniumbase&apos;: &apos;4.14.8&apos;, &apos;xdist&apos;: &apos;3.2.1&apos;, &apos;describe&apos;: &apos;2.1.0&apos;, &apos;rerunfailures&apos;: &apos;11.1.2&apos;, &apos;mock&apos;: &apos;3.6.1&apos;, &apos;describe-it&apos;: &apos;0.1.0&apos;, &apos;ordering&apos;: &apos;0.6&apos;, &apos;cov&apos;: &apos;4.0.0&apos;, &apos;bdd-html&apos;: &apos;0.1.14a0&apos;, &apos;metadata&apos;: &apos;2.0.4&apos;, &apos;anyio&apos;: &apos;3.6.2&apos;, &apos;forked&apos;: &apos;1.6.0&apos;, &apos;bdd&apos;: &apos;6.1.1&apos;}</td></tr>
+        <td>{&apos;html&apos;: &apos;2.0.1&apos;, &apos;pspec&apos;: &apos;0.0.4&apos;, &apos;seleniumbase&apos;: &apos;4.14.9&apos;, &apos;xdist&apos;: &apos;3.2.1&apos;, &apos;describe&apos;: &apos;2.1.0&apos;, &apos;rerunfailures&apos;: &apos;11.1.2&apos;, &apos;mock&apos;: &apos;3.6.1&apos;, &apos;describe-it&apos;: &apos;0.1.0&apos;, &apos;ordering&apos;: &apos;0.6&apos;, &apos;cov&apos;: &apos;4.0.0&apos;, &apos;bdd-html&apos;: &apos;0.1.14a0&apos;, &apos;metadata&apos;: &apos;2.0.4&apos;, &apos;anyio&apos;: &apos;3.6.2&apos;, &apos;forked&apos;: &apos;1.6.0&apos;, &apos;bdd&apos;: &apos;6.1.1&apos;}</td></tr>
       <tr>
         <td>Python</td>
         <td>3.11.3</td></tr></table>
     <h2>Summary</h2>
-    <p>33 tests ran in 0.10 seconds. </p>
-    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="passed">32 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="failed">1 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>, <input checked="true" class="filter" data-test-result="rerun" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="rerun">0 rerun</span>
+    <p>45 tests ran in 1.43 seconds. </p>
+    <p class="filter" hidden="true">(Un)check the boxes to filter the results.</p><input checked="true" class="filter" data-test-result="passed" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="passed">45 passed</span>, <input checked="true" class="filter" data-test-result="skipped" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="skipped">0 skipped</span>, <input checked="true" class="filter" data-test-result="failed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="failed">0 failed</span>, <input checked="true" class="filter" data-test-result="error" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="error">0 errors</span>, <input checked="true" class="filter" data-test-result="xfailed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="xfailed">0 expected failures</span>, <input checked="true" class="filter" data-test-result="xpassed" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="xpassed">0 unexpected passes</span>, <input checked="true" class="filter" data-test-result="rerun" disabled="true" hidden="true" name="filter_checkbox" onChange="filter_table(this)" type="checkbox"/><span class="rerun">0 rerun</span>
     <h2>Results</h2>
     <table id="results-table">
       <thead id="results-table-head">
@@ -273,9 +474,9 @@ function filter_table(elem) {
           <th>Links</th></tr>
         <tr hidden="true" id="not-found-message">
           <th colspan="5">No results found. Try to check the filters</th></tr></thead>
-      <tbody class="failed results-table-row">
+      <tbody class="passed results-table-row">
         <tr>
-          <td class="col-result">Failed</td>
+          <td class="col-result">Passed</td>
           <td class="col-name">tests/e2e/steps/test_e2e_api_berlin_clock.py::::/Users/michele.brissoni/ProgettiGit/UndeadGrishnackh/20230407_berlinclock2/tests/e2e/features/api_berlin_clock.feature: ð it&apos;s italian lunch time!</td>
           <td Class="col-description">
             <div Class="col-description-bdd-doc">
@@ -297,7 +498,7 @@ function filter_table(elem) {
           <td class="col-links"></td></tr>
         <tr>
           <td class="extra" colspan="5">
-            <div class="log">fixturefunc = &lt;function step_impl at 0x1044b9ee0&gt;, request = &lt;FixtureRequest for &lt;Function test__its_italian_lunch_time&gt;&gt;, kwargs = {&#x27;api_clock&#x27;: {}}<br/><br/>    def call_fixture_func(<br/>        fixturefunc: &quot;_FixtureFunc[FixtureValue]&quot;, request: FixtureRequest, kwargs<br/>    ) -&gt; FixtureValue:<br/>        if is_generator(fixturefunc):<br/>            fixturefunc = cast(<br/>                Callable[..., Generator[FixtureValue, None, None]], fixturefunc<br/>            )<br/>            generator = fixturefunc(**kwargs)<br/>            try:<br/>                fixture_result = next(generator)<br/>            except StopIteration:<br/>                raise ValueError(f&quot;{request.fixturename} did not yield a value&quot;) from None<br/>            finalizer = functools.partial(_teardown_yield_fixture, fixturefunc, generator)<br/>            request.addfinalizer(finalizer)<br/>        else:<br/>            fixturefunc = cast(Callable[..., FixtureValue], fixturefunc)<br/>&gt;           fixture_result = fixturefunc(**kwargs)<br/><br/>../../../.local/share/virtualenvs/20230407_berlinclock2-wxp0eHfK/lib/python3.11/site-packages/_pytest/fixtures.py:909: <br/>_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ <br/><br/>api_clock = {}<br/><br/>    @then(&quot;the API should say it&#x27;s O RROO RRRO YYRYYRYOOOO YOOO&quot;)<br/>    def step_impl(api_clock):<br/>        payload = api_clock<br/>&gt;       assert payload.get(&#x27;seconds&#x27;) == &quot;O&quot;<br/><span class="error">E       AssertionError: assert None == &#x27;O&#x27;</span><br/><span class="error">E        +  where None = &lt;built-in method get of dict object at 0x1045031c0&gt;(&#x27;seconds&#x27;)</span><br/><span class="error">E        +    where &lt;built-in method get of dict object at 0x1045031c0&gt; = {}.get</span><br/><br/>tests/e2e/steps/test_e2e_api_berlin_clock.py:21: AssertionError<br/></div></td></tr></tbody>
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
@@ -328,12 +529,56 @@ that have passed since midnight displayed in a 5x5 grid of light bulbs.</div></d
       <tbody class="passed results-table-row">
         <tr>
           <td class="col-result">Passed</td>
+          <td class="col-name">tests/integration/test_integration_contract.py::describe_contract_test_to_ensure_the_api_dictionary_is_as_expected::ðð­ should find the API dictionary definition for the getTime V1.0.0</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🔌🎭 should find the API dictionary definition for the getTime V1.0.0</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/integration/test_integration_contract.py::describe_contract_test_to_ensure_the_api_dictionary_is_as_expected::ðð­ should find the right JSON schema for the berlin clock get time ver. 1.0.0</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🔌🎭 should find the right JSON schema for the berlin clock get time ver. 1.0.0</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/integration/test_integration_contract.py::describe_contract_test_to_ensure_that_the_api_developed_is_like_the_contract_above::ðð­ should find the right JSON schema for the berlin clock get time ver. 1.0.0</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🔌🎭 should find the right JSON schema for the berlin clock get time ver. 1.0.0</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/integration/test_integration_contract.py::describe_integration_test_to_ensure_the_api_exposed_on_localhost_is_the_same_as_in_the_contract_above::ðð§ªð­ should call the api on localhost as for the contract ver. 1.0.0</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🔌🧪🎭 should call the api on localhost as for the contract ver. 1.0.0</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
           <td class="col-name">tests/unit/test_0_clock_modules_integration.py::describe_berlin_cloack_modules_composition_second_bulb_hours_minute::ð should return the correct string for the berlin clock at 00:00:01 with all the light OFF:
 â¬ï¸ 
 â¬ï¸â¬ï¸â¬ï¸â¬ï¸ 
 â¬ï¸â¬ï¸â¬ï¸â¬ï¸ 
 â¬ï¸â¬ï¸â¬ï¸â¬ï¸â¬ï¸â¬ï¸â¬ï¸â¬ï¸â¬ï¸â¬ï¸â¬ï¸ 
-â¬ï¸â¬ï¸â¬ï¸â¬ï¸ </td>
+â¬ï¸â¬ï¸â¬ï¸â¬ï¸</td>
           <td Class="col-description">
             <div Class="col-description-func-doc">🔌 should return the correct string for the berlin clock at 00:00:01 with all the light OFF:</div></td>
           <td class="col-duration">0.00</td>
@@ -666,6 +911,94 @@ that have passed since midnight displayed in a 5x5 grid of light bulbs.</div></d
           <td class="col-name">tests/unit/test_3_minutes_modules.py::describe_minutes_module::ð§ª should be all ON in the TOP ROW of minutes ð¨ð¨ð¥ð¨ð¨ð¥ð¨ð¨ð¥ð¨ð¨ at 00:59:01</td>
           <td Class="col-description">
             <div Class="col-description-func-doc">🧪 should be all ON in the TOP ROW of minutes 🟨🟨🟥🟨🟨🟥🟨🟨🟥🟨🟨 at 00:59:01</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_connector.py::describe_the_api_connector_must_enforce_input_and_output_standards::ð§ª should check the string converter provides the right json</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🧪 should check the string converter provides the right json</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_connector.py::describe_the_api_connector_must_enforce_input_and_output_standards::ð§ª should block a wrong Berlin Clock string format to be converted</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🧪 should block a wrong Berlin Clock string format to be converted</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_connector.py::describe_the_api_connector_must_enforce_input_and_output_standards::ð§ª should block NON input string to be converted</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🧪 should block NON input string to be converted</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_connector.py::describe_component_test_to_ensure_the_api_connector_handles_200_and_400_reply_types::ð§ª should expect a 200 with proper json time at 12:34:56</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🧪 should expect a 200 with proper json time at 12:34:56</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_connector.py::describe_component_test_to_ensure_the_api_connector_handles_200_and_400_reply_types::ð§ª should expect a 400 as HTTPException for wrong time request</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🧪 should expect a 400 as HTTPException for wrong time request</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_connector.py::describe_component_test_to_ensure_the_api_connector_handles_200_and_400_reply_types::ð§ª should expect a 400 as HTTPException for wrong time request</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🧪 should expect a 400 as HTTPException for wrong time request</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_connector.py::describe_component_test_to_ensure_the_api_connector_handles_200_and_400_reply_types::ð§ª should expect a 400 as HTTPException for wrong time request</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🧪 should expect a 400 as HTTPException for wrong time request</div></td>
+          <td class="col-duration">0.00</td>
+          <td class="col-links"></td></tr>
+        <tr>
+          <td class="extra" colspan="5">
+            <div class="empty log">No log output captured.</div></td></tr></tbody>
+      <tbody class="passed results-table-row">
+        <tr>
+          <td class="col-result">Passed</td>
+          <td class="col-name">tests/unit/test_api_connector.py::describe_component_test_to_ensure_the_api_connector_handles_200_and_400_reply_types::ð§ª should expect a 400 as HTTPException for wrong time request</td>
+          <td Class="col-description">
+            <div Class="col-description-func-doc">🧪 should expect a 400 as HTTPException for wrong time request</div></td>
           <td class="col-duration">0.00</td>
           <td class="col-links"></td></tr>
         <tr>

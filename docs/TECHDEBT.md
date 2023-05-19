@@ -15,3 +15,7 @@ More the code, more are the debts. Keep here which kind of debts were being made
 ✅ Rename method seconds_bulb for consistency with other component methods
 [ ] Improve Groovy Script to change to SnakeCase
 ✅ Refactor tests as table-driven tests to avoid repetition/lots of typing
+[ ] DRY: API contract and integration test must use the same test case not a copy of it
+[ ] HEX architecture: the API connector need to be unit tested to improve the readability of howe the string is split into tokens for the json payload
+[ ] CI/CD: the integration test lacks of a real application api call
+[ ] CI/CD: the CD step must produce a docker image with related structural tests

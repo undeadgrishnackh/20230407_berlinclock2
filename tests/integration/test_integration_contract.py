@@ -14,13 +14,9 @@ def describe_contract_test_to_ensure_the_api_dictionary_is_as_expected():
     def response_berlin_clock_api_dictionary_v1_0_0():
         api_version = "1.0.0"
         api_name = "getTime"
-        base_url_swagger_mock = (
-            "https://virtserver.swaggerhub.com/undeadgrishnackh74/berlinClock"
-        )
+        base_url_swagger_mock = "https://virtserver.swaggerhub.com/undeadgrishnackh74/berlinClock"
         parameter_name = "timestamp"
-        return requests.get(
-            f"{base_url_swagger_mock}/{api_version}/{api_name}?{parameter_name}={timestamp}"
-        )
+        return requests.get(f"{base_url_swagger_mock}/{api_version}/{api_name}?{parameter_name}={timestamp}")
 
     def should_find_the_api_dictionary_definition_for_the_get_time_v1_0_0(
         response_berlin_clock_api_dictionary_v1_0_0,
@@ -42,14 +38,27 @@ def describe_contract_test_to_ensure_the_api_dictionary_is_as_expected():
 
 
 def describe_contract_test_to_ensure_that_the_api_developed_is_like_the_contract_above():
-    """📂 contract test to ensure that the API developed is like the contract above"""
+    """📂 contract test to ensure that the API developed is like the OPEN API specs"""
 
     def should_find_the_same_reply_as_for_the_berlin_clock_get_time_v_1_0_0_contract():
         """🔌🎭 should find the right JSON schema for the berlin clock get time ver. 1.0.0"""
-        response_berlin_clock_api = berlin_clock.get_berlin_clock(timestamp)
+        response_berlin_clock_api = berlin_clock.berlin_clock_api(timestamp)
         assert response_berlin_clock_api.get("time") == "13:56:01"
         assert response_berlin_clock_api.get("seconds") == "O"
         assert response_berlin_clock_api.get("hours").get("top") == "RROO"
         assert response_berlin_clock_api.get("hours").get("bottom") == "RRRO"
         assert response_berlin_clock_api.get("minutes").get("top") == "YYRYYRYYRYY"
         assert response_berlin_clock_api.get("minutes").get("bottom") == "YOOO"
+
+
+def describe_integration_test_to_ensure_the_api_exposed_on_localhost_is_the_same_as_in_the_contract_above():
+    """📂 integration test to ensure the API exposed on localhost is the same as in the OPEN API specs"""
+
+    def should_call_the_api_on_localhost_as_for_the_contract_ver_1_0_0():
+        """🔌 should call the api on localhost as for the contract ver. 1.0.0"""
+
+        # launch the api in the background
+
+        # curl the API
+
+        # check the reply

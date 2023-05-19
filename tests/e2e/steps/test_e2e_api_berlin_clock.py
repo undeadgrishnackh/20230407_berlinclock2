@@ -12,7 +12,7 @@ def give_an_user_asks_the_berlin_clock_api(mocker):
 
 @when("they look at the clock at 13:36:01", target_fixture="api_clock")
 def api_clock():
-    return berlin_clock.get_berlin_clock("13:36:01")
+    return berlin_clock.berlin_clock_api("13:36:01")
 
 
 @then("the API should say it's O RROO RRRO YYRYYRYOOOO YOOO")
