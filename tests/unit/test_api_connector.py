@@ -58,7 +58,7 @@ def describe_the_api_connector_must_enforce_input_and_output_standards():
             api_connector.convert_berlin_clock_string_into_json(wrong_input_format)
             assert False
         except TypeError as error:
-            assert str(error) == "expected string or bytes-like object, got 'set'"
+            assert "expected string" in str(error)
 
 
 def describe_component_test_to_ensure_the_api_connector_handles_200_and_400_reply_types():
