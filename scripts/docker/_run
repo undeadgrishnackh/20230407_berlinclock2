@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+
+IMAGE_ARCH=$(uname -m)
+IMAGE_NAME="undeadgrishnackh/berlin_clock"
+IMAGE_TAG="latest"
+PORT=8000
+CONTAINER_NAME="berlin_clock"
+COMPOSE_SERVICE_NAME="berlin_clock_api_server"
+TEST_ME='curl -X GET "http://127.0.0.1:8000/1.0.0/getTime?timestamp=12:56:23"'
+DOCKER_REGISTRY_USER="undeadgrishnackh"
+DOCKER_REGISTRY_URL="https://index.docker.io/v1"
+
+function report_fatal_error_and_exit() { echo "💥 Fatal Error! $1"; exit 1; }
+
+function ctrl_c_signal_detect() {
+  echo "✅ 🔬 the image ${IMAGE_NAME} inspection is done...."
+  echo "📴 stopping the container ${CONTAINER_NAME}"
+  docker container stop ${CONTAINER_NAME}
+  echo "🗑️ stopping the container ${CONTAINER_NAME}"
+  docker container rm ${CONTAINER_NAME}
+
+  echo "🔬 ${IMAGE_NAME} task completed. 🎉"
+}
+
+function run_docker_container() {
+  echo "🎬 starting a detached container ${IMAGE_NAME}:${IMAGE_TAG} via docker run..."
+  echo "💁🏻‍ The container requires you've built it upfront with the _build script!"
+  docker run -it --rm --name ${CONTAINER_NAME} --add-host "host.docker.internal:host-gateway" --publish ${PORT}:${PORT} ${IMAGE_NAME}:dev
+  echo "📴 ${IMAGE_NAME}:dev was shutdown...";
+  echo "🧹 clean up process.... ${IMAGE_NAME}:dev deleted 🧼"
+}
+
+function stop_docker_compose() {
+  echo "📴 stopping the docker-compose service ${COMPOSE_SERVICE_NAME}"
+  if ! docker-compose --project-name ${COMPOSE_SERVICE_NAME} stop ; then
+    report_fatal_error_and_exit "Unable to stop ${COMPOSE_SERVICE_NAME}"
+  fi
+  echo "✅ docker compose service ${COMPOSE_SERVICE_NAME} stopped."
+}
+
+function watch_the_logs_compose () {
+  echo "👀 to LOGS TAIL: docker-compose --project-name ${COMPOSE_SERVICE_NAME} logs -f"
+  docker-compose --project-name ${COMPOSE_SERVICE_NAME} logs -f
+}
+
+
+function connect_terminal_to_docker_compose () {
+  echo "🔌 connecting to the docker-compose service ${COMPOSE_SERVICE_NAME}"
+  if ! docker-compose --project-name ${COMPOSE_SERVICE_NAME} exec ${COMPOSE_SERVICE_NAME} bash ; then
+    report_fatal_error_and_exit "Unable to connect to ${COMPOSE_SERVICE_NAME}"
+  fi
+  echo "✅ connected to the docker-compose service ${COMPOSE_SERVICE_NAME} done."
+}
+
+function remove_the_docker_compose () {
+  echo "🗑️ removing the docker-compose service ${COMPOSE_SERVICE_NAME}"
+  if ! docker-compose --project-name ${COMPOSE_SERVICE_NAME} rm -f ; then
+    report_fatal_error_and_exit "Unable to remove ${COMPOSE_SERVICE_NAME}"
+  fi
+  echo "✅ docker compose service ${COMPOSE_SERVICE_NAME} removed."
+}
+
+function update_the_docker_compose () {
+  echo "♻️ updating the docker-compose service ${COMPOSE_SERVICE_NAME}"
+  if ! docker-compose --project-name ${COMPOSE_SERVICE_NAME} pull ; then
+    report_fatal_error_and_exit "Unable to update ${COMPOSE_SERVICE_NAME}"
+  fi
+  echo "✅ docker compose service ${COMPOSE_SERVICE_NAME} updated."
+}
+
+function run_docker_compose() {
+  echo "🎬 starting the docker-compose service ${COMPOSE_SERVICE_NAME}"
+
+  if ! docker-compose --file ${1} --project-name ${COMPOSE_SERVICE_NAME} up -d --remove-orphans; then
+    report_fatal_error_and_exit "Unable to start ${COMPOSE_SERVICE_NAME} with the configuration ${1}"
+  fi
+  echo ''
+  echo "✅ docker compose service ${COMPOSE_SERVICE_NAME} started with configuration ${1}."
+}
+
+function how_to_use_it () {
+  echo "ℹ️ How-to go use it:"
+  echo "1) 🎬 to START it: 1️⃣ ./_run -s = Docker-Compose latest image from the container registry"
+  echo "                   2️⃣ ./_run -d = Docker-Compose using the 'build .' in docker-compose.yaml"
+  echo "                   3️⃣ ./_run -t = Docker self removing container"
+  echo "2) 📴 to STOP it: ./_run -k"
+  echo "3) 👀 to LOGS TAIL: ./_run -l"
+  echo "4) 🔌 to CONNECT IT: ./_run -c"
+  echo "5) 🏃️ to TEST IT: ${TEST_ME}"
+  echo "6) 🗑️ to REMOVE IT: ./_run -r"
+  echo "7) 📦 to UPDATE IT: ./_run -u"
+  echo ''
+}
+
+function login_to_container_registry () {
+  echo "🔌 Login to Docker Container Registry"
+  if ! docker login -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_READ_ONLY_TOKEN} ${DOCKER_REGISTRY_URL} ; then
+    report_fatal_error_and_exit "Login to the Container Registry raised an error...";
+  fi
+  echo "✅ logged in the Container Registry."
+  echo ''
+}
+
+function pull_the_latest_image () {
+  echo "🚚 Pull the latest image from Docker Container Registry"
+  if ! docker pull ${IMAGE_NAME}:${IMAGE_TAG} ; then
+    report_fatal_error_and_exit "Pulling the latest image from Docker Container Registry raised an error..."; 
+  fi
+  echo "✅ latest image pulled from Docker Container Registry."
+  echo ''
+}
+
+function check_docker_daemon_is_running () {
+  echo "🚦 check if docker daemon is running..."
+  if ! docker ps ; then
+    echo "💥 docker daemon is NOT running!";
+    echo "🔧 FIX: service docker start";
+    exit 1;
+  fi
+  echo "✅ docker daemon is running."
+  echo ''
+}
+
+# ----------------------------------------------------------------------
+
+
+clear
+echo "🔧 wrapper to help you work with the container 🧱"
+echo "🔎 architecture detected: ${IMAGE_ARCH}"
+echo "🏷️ image name:            ${IMAGE_NAME}"
+echo "🏷️ image tag:             ${IMAGE_TAG}"
+echo "🔌 port:                  ${PORT}"
+echo ''
+
+case $1 in
+  -s)
+    check_docker_daemon_is_running
+    login_to_container_registry
+    pull_the_latest_image
+    run_docker_compose docker-compose.yml
+    ;;
+  -d)
+    check_docker_daemon_is_running
+    run_docker_compose docker-compose.dev.yml
+    ;;
+  -k)
+    stop_docker_compose
+    ;;
+  -l)
+    watch_the_logs_compose
+    ;;
+  -c)
+    connect_terminal_to_docker_compose
+    ;;
+  -r)
+    remove_the_docker_compose
+    ;;
+  -u)
+    update_the_docker_compose
+    ;;
+  -t)
+    check_docker_daemon_is_running
+    run_docker_container
+    ;;
+  --help)
+    how_to_use_it
+    ;;
+  *)
+    how_to_use_it
+    ;;
+esac

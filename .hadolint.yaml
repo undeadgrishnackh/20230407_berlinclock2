@@ -1,0 +1,1 @@
+failure-threshold: error                # name of threshold level (error | warning | info | style | ignore | none)

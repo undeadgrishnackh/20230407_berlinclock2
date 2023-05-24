@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+clear
+
+IMAGE_ARCH=$(uname -m)
+IMAGE_NAME="undeadgrishnackh/berlin_clock"
+IMAGE_TAG="dev"
+DOCKER_FILE=./Dockerfile
+
+echo "🧱 Local docker build script to test your flow before going into the CICD"
+echo "ℹ️ This script builds a local image based on your laptop architecture"
+echo "   architecture detected 👉 ${IMAGE_ARCH}"
+echo "_________________________________________________________________________"
+echo "🔧 Building ${IMAGE_NAME} in progress...."
+echo ''
+
+if ! hadolint ${DOCKER_FILE}; then
+  echo "💥 🔎 Docker Linter raised some warnings/errors! Fix them before continuing with the build."; 
+  exit 1;
+fi
+echo "✅ 🐳 Docker Linter passed."
+echo "_________________________________________________________________________"
+echo ''
+set -e
+
+# if the build behaves strangely, try to add --no-cache
+if ! docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f Dockerfile . ; then
+  echo "💥 🐳 Docker build failed."; 
+  exit 1;
+fi
+echo "✅ 🐳 Docker build passed --> 👷🏻‍ ARCH: ${IMAGE_ARCH} 🏗️ IMAGE: ${IMAGE_NAME} 🏷 TAG: ${IMAGE_TAG}"
+echo "_________________________________________________________________________"
+echo ''
+
+
+echo "🎉 it's test time!"
+echo "🧬 structural test in progress...."
+if ! inspec exec ../../tests/release/inspec/dockerfile ; then
+  echo "💥 🐳 Inspec test 🧪 failed."; 
+  exit 1;
+fi
+echo "✅ 🐳 Inspec test 🧪 passed."
+echo "_________________________________________________________________________"
+echo ''
+
+if ! container-structure-test test --config ../../tests/release/container-structure/components.yaml --output text --image ${IMAGE_NAME}:${IMAGE_TAG} ; then
+  echo "💥 🐳 Structural 🧪 test failed."; 
+  exit 1;
+fi
+echo ''
+echo "✅ 🐳 Structural 🧪 test passed."
+echo "_________________________________________________________________________"
+
+
+echo "🗜 check container waste efficiency"
+CI=true dive $IMAGE_NAME:${IMAGE_TAG}
+echo "_________________________________________________________________________"
+echo '🏁FINISH!'

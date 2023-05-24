@@ -1,1 +1,11 @@
-pipenv shell 'uvicorn modules.api.berlin_clock:app --reload'
+#!/bin/bash
+
+# Check if the port is passed
+if [[ "$1" == "--port" ]]; then
+  echo "uvicorn forced on --port $2"
+  uvicorn modules.api.berlin_clock:app --host 0.0.0.0 --port $2
+else
+  echo "uvicorn will start with  the default port"
+  echo "to tune it with a different one use the --port 1234 parameter"
+  uvicorn modules.api.berlin_clock:app --host 0.0.0.0
+fi

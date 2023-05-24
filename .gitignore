@@ -168,4 +168,7 @@ downloaded_files/
 
 # pytest coverage
 htmlcov/
+junit/
+htmlReport/
+coverage_html_report/
 

@@ -1,0 +1,20 @@
+version: "3.3"
+services:
+  berlin_clock:
+    # --------------------------------------------------------------
+    # LOCAL BUILD
+    # uncomment to build from local Dockerfile
+    build: .
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    # --------------------------------------------------------------
+    # platform: linux/arm64
+    labels:
+      version: "1.0.0"
+      python.version: "3.9"
+      container.description: "Berlin Clock API Server with FastAPI"
+    container_name: "berlin_clock"
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

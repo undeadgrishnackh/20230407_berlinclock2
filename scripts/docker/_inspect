@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+IMAGE_ARCH=$(uname -m)
+IMAGE_NAME="undeadgrishnackh/berlin_clock"
+IMAGE_TAG="dev"
+PORT=8000
+CONTAINER_NAME="berlin_clock"
+
+clear
+echo "🕵️‍♀️ Time to investigate what is inside the local development container 🧱"
+echo "🔎 architecture detected: ${IMAGE_ARCH}"
+echo "🏷️ image name:            ${IMAGE_NAME}"
+echo "🏷️ image tag:             ${IMAGE_TAG}"
+echo "🔌 port:                  ${PORT}"
+echo ''
+
+clear
+echo "🔬 time to inspect the ${IMAGE_NAME}..."
+echo ''
+
+docker run --publish ${PORT}:${PORT} --name ${CONTAINER_NAME} --rm -i --add-host "host.docker.internal:host-gateway" --entrypoint /bin/bash -t ${IMAGE_NAME}:${IMAGE_TAG}
+echo "🔬 the image ${IMAGE_NAME}:${IMAGE_TAG} inspection is done."
+echo "🧹 the ${CONTAINER_NAME} was cleaned up!"
+echo "✅ inspection completed."
