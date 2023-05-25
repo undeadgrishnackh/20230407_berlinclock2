@@ -57,4 +57,6 @@ testReportHtmlCoverage = "pytest --cov=modules --cov-report term --cov-report ht
 docker_build = "scripts/docker/_build"
 docker_run = "scripts/docker/_run -t"
 docker_inspect = "scripts/docker/_inspect"
-docker_compose_run = "scripts/docker/_run -"
+docker_compose_run_local_build = "scripts/docker/_run -d"
+docker_compose_run_latest_hub = "scripts/docker/_run -s"
+smoke_test_berlin_clock_api = "tests/smoke/berlin_clock_api_container_test.sh"

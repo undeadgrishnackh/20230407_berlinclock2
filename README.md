@@ -1,3 +1,9 @@
+![Build Status](https://github.com/undeadgrishnackh/20230407_berlinclock2/actions/workflows/cicd.yml/badge.svg)
+[![CodeScene general](https://codescene.io/images/analyzed-by-codescene-badge.svg)](https://codescene.io/projects/39650)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=undeadgrishnackh_20230407_berlinclock2&metric=coverage)](https://sonarcloud.io/summary/new_code?id=undeadgrishnackh_20230407_berlinclock2)
+
+                
+
 # BerlinClock Kata   
 
 ## The Kata

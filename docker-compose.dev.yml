@@ -13,7 +13,7 @@ services:
       version: "1.0.0"
       python.version: "3.9"
       container.description: "Berlin Clock API Server with FastAPI"
-    container_name: "berlin_clock"
+    container_name: "berlin_clock_dev"
     ports:
       - "8000:8000"
     extra_hosts:

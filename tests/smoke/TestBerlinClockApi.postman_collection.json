@@ -1,0 +1,70 @@
+{
+	"info": {
+		"_postman_id": "b839092b-3484-4801-ba78-48def377c80a",
+		"name": "BerlinClockApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "109718"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"expected_response = {",
+							"    \"time\": \"12:56:23\",",
+							"    \"seconds\": \"O\",",
+							"    \"hours\": {",
+							"        \"top\": \"RROO\",",
+							"        \"bottom\": \"RROO\"",
+							"    },",
+							"    \"minutes\": {",
+							"        \"top\": \"YYRYYRYYRYY\",",
+							"        \"bottom\": \"YOOO\"",
+							"    }",
+							"}",
+							"",
+							"pm.test(\"Check the payload\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql(expected_response);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/1.0.0/getTime?timestamp=12:56:23",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"1.0.0",
+						"getTime"
+					],
+					"query": [
+						{
+							"key": "timestamp",
+							"value": "12:56:23"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

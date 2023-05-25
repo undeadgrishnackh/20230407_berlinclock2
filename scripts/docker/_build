@@ -34,7 +34,7 @@ echo ''
 
 echo "🎉 it's test time!"
 echo "🧬 structural test in progress...."
-if ! inspec exec ../../tests/release/inspec/dockerfile ; then
+if ! inspec exec ./tests/release/inspec/dockerfile ; then
   echo "💥 🐳 Inspec test 🧪 failed."; 
   exit 1;
 fi
@@ -42,7 +42,7 @@ echo "✅ 🐳 Inspec test 🧪 passed."
 echo "_________________________________________________________________________"
 echo ''
 
-if ! container-structure-test test --config ../../tests/release/container-structure/components.yaml --output text --image ${IMAGE_NAME}:${IMAGE_TAG} ; then
+if ! container-structure-test test --config ./tests/release/container-structure/components.yaml --output text --image ${IMAGE_NAME}:${IMAGE_TAG} ; then
   echo "💥 🐳 Structural 🧪 test failed."; 
   exit 1;
 fi

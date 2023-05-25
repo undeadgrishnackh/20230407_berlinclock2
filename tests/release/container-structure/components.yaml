@@ -1,0 +1,51 @@
+schemaVersion: '2.0.0'
+
+metadataTest:
+  envVars:
+    - key: PORT
+      value: "8000"
+    - key: HOST
+      value: "0.0.0.0"
+  exposedPorts: ["8000"]
+  entrypoint:  ["/app/start_api_server"]
+  workdir: "/app"
+
+commandTests:
+  - name:  "🔎  Python is installed"
+    command: "which"
+    args: ["python"]
+    exitCode: 0
+    expectedOutput: ["/usr/local/bin/python"]
+  - name: "🏷 Python version"
+    command: "python"
+    args: ["--version"]
+    expectedOutput: [".*3.9*"]
+  - name: "🔎 pipenv is installed"
+    command: "which"
+    args: ["pipenv"]
+    exitCode: 0
+    expectedOutput: ["/usr/local/bin/pipenv"]
+  - name: "🔎 pipenv is installed"
+    command: "which"
+    args: [ "uvicorn" ]
+    exitCode: 0
+    expectedOutput: [ "/usr/local/bin/uvicorn" ]
+
+fileExistenceTests:
+- name: '📝 Pipfile'
+  path: '/app/Pipfile'
+  shouldExist: true
+- name: '📝 Pipfile.lock'
+  path: '/app/Pipfile.lock'
+  shouldExist: true
+- name: '📦 BerlinClock logic'
+  path: '/app/modules/berlin_clock.py'
+  shouldExist: true
+
+fileContentTests:
+- name: '📝 Pipfile - FastAPI and uvcorn'
+  path: '/app/Pipfile'
+  expectedContents: [
+                    'fastapi = "*"',
+                    'uvicorn = '
+                    ]
