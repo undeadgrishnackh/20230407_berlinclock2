@@ -14,11 +14,23 @@ The kata is from [CodeWars](https://www.codewars.com/kata/5a1463678ba9145a670000
 
 - Double loop (BDD - TDD) : E2E tests defined in gherkin 🥒 and then iterate in the internal loop via atomic ⚛️ unit tests.
 - CI/CD pipeline with GitHub Actions
-- local quality gate with linter, black, conventional commits, etc. 
+- local quality gate with linter, black, conventional commits, etc.
+- HEX Architecture
+
+## 🎯Target
+
+- BerlinClock Domain wrapped into an API server
+- API dictionary defined via OpenAPI
+- API Server tested with:
+  - contract test
+  - integration tests during the CI
+  - smoke test post delivery
+- Api Server packaged into a container
+- Container build and tested to ensure: linter, structure, security, efficiency 
 
 ---
 
-## Description
+## Description of the kata
 
 The "Berlin Clock" is the first public clock in the world that tells the time by means of illuminated, coloured fields, for which it entered the Guinness Book of Records upon its installation on 17 June 1975.
 
