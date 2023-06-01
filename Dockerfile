@@ -14,8 +14,9 @@ COPY Pipfile Pipfile.lock .launch_api_server ./
 COPY modules /app/modules/
 
 RUN pip install --no-cache-dir pipenv && \
+    python -m pip install --upgrade pip && \
     pipenv install --system --deploy && \
-    echo '#!/usr/bin/env bash'> /app/start_api_server && \
+    echo '#!/usr/bin/env bash' > /app/start_api_server && \
     echo 'uvicorn modules.api.berlin_clock:app --host ${HOST} --port ${PORT}' >> /app/start_api_server && \
     chmod 755 /app/start_api_server
 

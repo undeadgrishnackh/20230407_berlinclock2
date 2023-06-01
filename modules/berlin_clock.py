@@ -15,12 +15,20 @@ def berlin_clock(timestamp: str) -> str:
 
 
 def check_timestamp(timestamp):
-    if not isinstance(timestamp, str):
-        raise TimeFormatException("The time must be a string")
+    explode_if_not_a_string(timestamp)
+    explode_if_wrong_time_format(timestamp)
+
+
+def explode_if_wrong_time_format(timestamp):
     regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"
     pattern = re.compile(regex)
     if not re.search(pattern, timestamp):
         raise TimeFormatException("The time must be a string in the format 24HH:MM:ss")
+
+
+def explode_if_not_a_string(timestamp):
+    if not isinstance(timestamp, str):
+        raise TimeFormatException("The time must be a string")
 
 
 class TimeFormatException(Exception):

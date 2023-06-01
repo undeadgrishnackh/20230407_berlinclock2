@@ -25,7 +25,7 @@ commandTests:
     args: ["pipenv"]
     exitCode: 0
     expectedOutput: ["/usr/local/bin/pipenv"]
-  - name: "🔎 pipenv is installed"
+  - name: "🔎 uvicorn is installed"
     command: "which"
     args: [ "uvicorn" ]
     exitCode: 0
