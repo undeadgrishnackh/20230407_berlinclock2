@@ -32,17 +32,6 @@ jobs:
         run: |
           docker run --rm -i -v ${{ github.workspace }}/.hadolint.yaml:/.config/hadolint.yaml hadolint/hadolint < Dockerfile
 
-      - name: Gate - Google Container Structure Tests
-        run: |
-          docker pull gcr.io/gcp-runtimes/container-structure-test:latest
-          docker run --rm \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v ${{ github.workspace }}/tests/release/container-structure/:/test \
-            gcr.io/gcp-runtimes/container-structure-test:latest \
-              test \
-              --image my-app \
-              --config /test/components.yaml
-
       - name: Gate - Chef InSpec
         run: |
           docker pull chef/inspec:latest
@@ -63,6 +52,34 @@ jobs:
           docker buildx create --use
           docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ${{ env.IMAGE_NAME }} --push .
 
+      - name: Gate - Google Container Structure Tests
+        run: |
+          docker pull gcr.io/gcp-runtimes/container-structure-test:latest
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${{ github.workspace }}/tests/release/container-structure/:/test \
+            gcr.io/gcp-runtimes/container-structure-test:latest \
+              test \
+              --image ${{ env.IMAGE_NAME }} \
+              --config /test/components.yaml
+
+      - name: Check - Dive
+        run: |
+          docker pull quay.io/wagoodman/dive:latest
+          docker run --rm -it \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            wagoodman/dive:latest \
+            ${{ env.IMAGE_NAME }}
+
+      - name: Check - Anchor
+        run: |
+          docker pull quay.io/goodwithtech/anchor:latest
+          docker run --rm \
+            -v $(pwd):/src \
+            -w /src \
+            quay.io/goodwithtech/anchor:latest \
+              check
+
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -77,15 +94,3 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-
-      - name: Check - Dive
-        run: |
-          docker pull wagoodman/dive:latest
-          docker save my-app -o my-app.tar
-          docker run --rm -v $(pwd):/container wagoodman/dive:latest my-app.tar
-
-      - name: Check - Anchor
-        run: |
-          docker pull quay.io/goodwithtech/anchor:latest
-          docker run --rm -v $(pwd):/src -w /src quay.io/goodwithtech/anchor:latest check
-
