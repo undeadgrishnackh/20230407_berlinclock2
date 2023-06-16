@@ -37,7 +37,7 @@ jobs:
           docker pull gcr.io/gcp-runtimes/container-structure-test:latest
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
-            -v ${{ github.workspace }}/tests/release/:/test \
+            -v ${{ github.workspace }}/tests/release/container-structure/:/test \
             gcr.io/gcp-runtimes/container-structure-test:latest \
               test \
               --image my-app \
