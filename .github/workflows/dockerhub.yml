@@ -35,12 +35,22 @@ jobs:
       - name: Gate - Google Container Structure Tests
         run: |
           docker pull gcr.io/gcp-runtimes/container-structure-test:latest
-          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock gcr.io/gcp-runtimes/container-structure-test:latest test --image my-app --config ${{ github.workspace }}/tests/release/container-structure/components.yaml
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v ${{ github.workspace }}/tests/release/:/test \
+            gcr.io/gcp-runtimes/container-structure-test:latest \
+              test \
+              --image my-app \
+              --config /test/components.yaml
 
       - name: Gate - Chef InSpec
         run: |
           docker pull chef/inspec:latest
-          docker run --rm -v ${{ github.workspace }}/tests/release/inspec/dockerfile:/profile chef/inspec:latest exec /profile
+          docker run --rm \
+            -v ${{ github.workspace }}/tests/release/inspec/dockerfile:/profile \
+            chef/inspec:latest \
+              exec \
+              /profile
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
