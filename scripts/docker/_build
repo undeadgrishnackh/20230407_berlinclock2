@@ -52,6 +52,27 @@ echo "_________________________________________________________________________"
 
 
 echo "🗜 check container waste efficiency"
-CI=true dive $IMAGE_NAME:${IMAGE_TAG}
+docker pull wagoodman/dive:latest
+docker save $IMAGE_NAME:${IMAGE_TAG} -o /tmp/my-app.tar
+if ! docker run --rm -v $(pwd):/container wagoodman/dive:latest /tmp/my-app.tar ; then
+  echo "💥 🐳 Dive test failed. Too much waste!"
+fi
+#CI=true dive $IMAGE_NAME:${IMAGE_TAG}
+echo "_________________________________________________________________________"
+
+
+echo "Anchor"
+docker pull quay.io/goodwithtech/anchor:latest
+if ! docker run --rm -v $(pwd):/modules -w /src quay.io/goodwithtech/anchor:latest check ; then
+  echo "💥 🐳 Anchor test failed."
+fi
+echo "_________________________________________________________________________"
+
+
+echo "Trivy"
+docker pull aquasec/trivy:latest
+if ! docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest --severity HIGH --no-progress $IMAGE_NAME:${IMAGE_TAG} ; then
+  echo "💥 🐳 Trivy test failed."
+fi
 echo "_________________________________________________________________________"
 echo '🏁FINISH!'
