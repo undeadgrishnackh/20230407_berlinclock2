@@ -37,10 +37,10 @@ jobs:
           docker pull chef/inspec:latest
           docker run --rm \
             -v ${{ github.workspace }}/tests/release/inspec/dockerfile:/profile \
+            -env CHEF_LICENSE='accept-no-persist' \
             chef/inspec:latest \
               exec \
               /profile
-              --chef-license=accept-no-persist
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
