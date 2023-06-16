@@ -37,7 +37,7 @@ jobs:
           docker pull chef/inspec:latest
           docker run --rm \
             -v ${{ github.workspace }}/tests/release/inspec/dockerfile:/profile \
-            -env CHEF_LICENSE='accept-no-persist' \
+            -e CHEF_LICENSE='accept-no-persist' \
             chef/inspec:latest \
               exec \
               /profile
