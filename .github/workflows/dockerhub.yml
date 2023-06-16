@@ -34,13 +34,12 @@ jobs:
 
       - name: Gate - Chef InSpec
         run: |
-          docker pull chef/inspec:latest
-          docker run --rm \
-            -v ${{ github.workspace }}/tests/release/inspec/dockerfile:/profile \
-            -e CHEF_LICENSE='accept-no-persist' \
-            chef/inspec:latest \
-              exec \
-              /profile
+          echo "🧪 🐳 DockerFile structure"
+          echo "🔌 Installation Inspec.io"
+          export CHEF_LICENSE=accept-silent
+          curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
+          echo "📁 run DockerFile structure test..."
+          inspec exec test/inspec/dockerfile
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
