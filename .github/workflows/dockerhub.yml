@@ -30,7 +30,7 @@ jobs:
 
       - name: Gate - Hadolint
         run: |
-          docker run --rm -i -v .hadolint.yaml:/.config/hadolint.yaml hadolint/hadolint < "$(Build.SourcesDirectory)/Dockerfile"
+          docker run --rm -i -v .hadolint.yaml:/.config/hadolint.yaml hadolint/hadolint < Dockerfile
 
       - name: Gate - Google Container Structure Tests
         run: |
