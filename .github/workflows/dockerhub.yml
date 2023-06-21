@@ -73,11 +73,9 @@ jobs:
 
       - name: 🚓 Check - Dive
         run: |
-          docker pull quay.io/wagoodman/dive:latest
-          docker run --rm -it \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            wagoodman/dive:latest \
-            ${{ env.IMAGE_NAME }}:build
+          wget https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb
+          sudo apt install ./dive_0.9.2_linux_amd64.debdocker pull quay.io/wagoodman/dive:latest
+          CI=true dive ${{ env.IMAGE_NAME }}:build
 
       - name: 🚓 Check - Anchor
         run: |
