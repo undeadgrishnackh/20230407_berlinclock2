@@ -8,6 +8,7 @@ on:
 
 env:
   IMAGE_NAME: undeadgrishnackh/berlin_clock
+  PLATFORMS: linux/amd64,linux/arm64
 
 
 jobs:
@@ -49,8 +50,9 @@ jobs:
 
       - name: Build Docker image
         run: |
+          pipenv lock
           docker buildx create --use
-          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t ${{ env.IMAGE_NAME }} --push .
+          docker buildx build --progress=plain --platform=${{ env.PLATFORMS }} --tag ${{ env.IMAGE_NAME }}:build -f Dockerfile . --push --no-cache
 
       - name: Gate - Google Container Structure Tests
         run: |
