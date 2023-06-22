@@ -68,7 +68,8 @@ jobs:
           chmod +x container-structure-test-linux-amd64
           sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
           echo "📁 run container structure test on ${{ env.IMAGE_NAME }}:build"
-          container-structure-test test --config tests/release/container-structure/components.yaml --output text --image ${{ env.IMAGE_NAME }}:build
+          container-structure-test test --config tests/release/container-structure/components.yaml --output text --pull --image ${{ env.IMAGE_NAME }}:build
+          docker pull undeadgrishnackh/berlin_clock:build
 
       - name: 🚓 Check - Dive
         run: |
