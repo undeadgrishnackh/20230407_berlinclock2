@@ -76,20 +76,18 @@ jobs:
           sudo apt install ./dive_0.9.2_linux_amd64.debdocker pull quay.io/wagoodman/dive:latest
           CI=true dive ${{ env.IMAGE_NAME }}:build
 
-      - name: 🚓 Check - Anchor
+      - name: 🚓 Check - Anchor Syft - Version Catalouge
         run: |
-          docker pull quay.io/goodwithtech/anchor:latest
-          docker run --rm \
-            -v $(pwd):/src \
-            -w /src \
-            quay.io/goodwithtech/anchor:latest \
-              check
+          echo "🔌 Installation Anchore/Syft"
+          curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+          echo "📁 catalogue the versions inside the container..."
+          syft ${{ env.IMAGE_NAME }}:build --scope all-layers
 
-      - name: Tag Docker image
+      - name: 🏷️ Tag Docker image
         run: |
           docker tag ${{ env.IMAGE_NAME }}:build ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
           docker images
 
-      - name: Push Docker image to Docker Hub
+      - name: 🔌 Publish :latest Docker image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
