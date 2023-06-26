@@ -69,12 +69,11 @@ jobs:
           sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
           echo "📁 run container structure test on ${{ env.IMAGE_NAME }}:build"
           container-structure-test test --config tests/release/container-structure/components.yaml --output text --pull --image ${{ env.IMAGE_NAME }}:build
-          docker pull undeadgrishnackh/berlin_clock:build
 
       - name: 🚓 Check - Dive
         run: |
           wget https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb
-          sudo apt install ./dive_0.9.2_linux_amd64.debdocker pull quay.io/wagoodman/dive:latest
+          sudo dpkg -i ./dive_0.9.2_linux_amd64.deb
           CI=true dive ${{ env.IMAGE_NAME }}:build
 
       - name: 🚓 Check - Anchor Syft - Version Catalouge
