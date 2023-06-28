@@ -99,18 +99,17 @@ jobs:
           echo "📁 catalogue the versions inside the container..."
           syft ${{ env.IMAGE_NAME }}:build --scope all-layers
 
-      - name: 🏷️ Tag Docker image
+      - name: 🏷️ Tag Docker image LATEST
         run: |
           docker login
           echo '🔎 Checking Docker images'
           docker images --all --format table
           echo '🏷️ Tagging Docker image with latest tag'
           docker tag ${{ env.IMAGE_NAME }}:build ${{ env.IMAGE_NAME }}:latest
+
+      - name: 🔌 Publish :latest Docker image to Docker Hub
+        run: |
           echo '🔌Pushing Docker image with latest tag'
           docker push ${{ env.IMAGE_NAME }}:latest
           echo '🔎 Checking Docker images'
           docker images --all --format table
-
-      - name: 🔌 Publish :latest Docker image to Docker Hub
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
