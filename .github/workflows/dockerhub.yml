@@ -85,8 +85,12 @@ jobs:
 
       - name: 🏷️ Tag Docker image
         run: |
+          echo 'Tagging Docker image with latest tag'
           docker tag ${{ env.IMAGE_NAME }}:build ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-          docker images
+          echo 'Pushing Docker image with latest tag'
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          echo 'Checking Docker images'
+          docker images --all --format table
 
       - name: 🔌 Publish :latest Docker image to Docker Hub
         run: |
