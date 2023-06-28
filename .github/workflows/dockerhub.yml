@@ -71,7 +71,7 @@ jobs:
           echo '🏗️ BuildX multi-arch agent'
           docker buildx create --use
           echo '🏗️ buildx build of ${{ env.IMAGE_NAME }}:build on ${{ env.PLATFORMS }}'
-          docker buildx build --progress=plain --platform=${{ env.PLATFORMS }} --tag ${{ env.IMAGE_NAME }}:build -f Dockerfile . --a --no-cache
+          docker buildx build --progress=plain --platform=${{ env.PLATFORMS }} --tag ${{ env.IMAGE_NAME }}:build -f Dockerfile . --push --no-cache
 
       - name: 🚓 Gate - Google Container Structure Tests
         run: |
