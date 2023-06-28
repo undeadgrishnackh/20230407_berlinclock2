@@ -10,6 +10,7 @@ env:
   IMAGE_NAME: undeadgrishnackh/berlin_clock
   PLATFORMS: linux/amd64,linux/arm64
   DOCKERHUB_USERNAME: undeadgrishnackh
+  DIVE_VERSION: 0.10.0
 
 
 jobs:
@@ -28,23 +29,31 @@ jobs:
 
       - name: 🔒Generate Lock File for dependencies
         run: |
+          echo '🏗️ install and upgrade pip'
           python -m pip install --upgrade pip
+          echo '🏗️ pipenv local virtual env installation'
           pip install pipenv
+          echo '🏗️ lock the PipFile.lock with the latest dependencies'
           pipenv lock
 
       - name: 🧪 Run unit, integration, and e2e tests inside the docker container
         run: |
+          echo '🧪✔️Unit - 🔌❌ Integration - 👩🏻‍💻✔️ E2E test into the Docker multi stage test image'
+          echo '💸 the integration test phase on the random port fails so far....'
           docker build -t ${{ env.IMAGE_NAME }}:test --target test -f ./Dockerfile.test .
 
       - name: 🚓 Gate - Hadolint
         run: |
+          echo '🕵️‍♂️ Hadolint'
           docker run --rm -i -v ${{ github.workspace }}/.hadolint.yaml:/.config/hadolint.yaml hadolint/hadolint < Dockerfile
 
       - name: 🚓 Gate - Chef InSpec
         run: |
           echo "🧪 🐳 DockerFile structure"
           echo "🔌 Installation Inspec.io"
+          echo '🏷️force silence license acceptance'
           export CHEF_LICENSE=accept-silent
+          echo '🔌 install inspec'
           curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
           echo "📁 run DockerFile structure test..."
           inspec exec tests/release/inspec/dockerfile
@@ -57,8 +66,11 @@ jobs:
 
       - name: ⚙️ Build Docker image
         run: |
+          echo '🏗️ Build PipFile.Lock with the latest dependencies'
           pipenv lock
+          echo '🏗️ BuildX multi-arch agent'
           docker buildx create --use
+          echo '🏗️ buildx build of ${{ env.IMAGE_NAME }}:build on ${{ env.PLATFORMS }}
           docker buildx build --progress=plain --platform=${{ env.PLATFORMS }} --tag ${{ env.IMAGE_NAME }}:build -f Dockerfile . --push --no-cache
 
       - name: 🚓 Gate - Google Container Structure Tests
@@ -73,8 +85,11 @@ jobs:
 
       - name: 🚓 Check - Dive
         run: |
-          wget https://github.com/wagoodman/dive/releases/download/v0.9.2/dive_0.9.2_linux_amd64.deb
-          sudo dpkg -i ./dive_0.9.2_linux_amd64.deb
+          echo '💿 Get Dive version ${{ env.DIVE_VERSION }}'
+          wget https://github.com/wagoodman/dive/releases/download/v${{ env.DIVE_VERSION }}/dive_${{ env.DIVE_VERSION }}_linux_amd64.deb
+          echo '🏗️ Installing Dive'
+          sudo dpkg -i ./dive_${{ env.DIVE_VERSION }}_linux_amd64.deb
+          echo "📁 run dive on ${{ env.IMAGE_NAME }}:build"
           CI=true dive ${{ env.IMAGE_NAME }}:build
 
       - name: 🚓 Check - Anchor Syft - Version Catalouge
@@ -87,13 +102,13 @@ jobs:
       - name: 🏷️ Tag Docker image
         run: |
           docker login
-          echo 'Checking Docker images'
+          echo '🔎 Checking Docker images'
           docker images --all --format table
-          echo 'Tagging Docker image with latest tag'
-          docker tag ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:build ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-          echo 'Pushing Docker image with latest tag'
-          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-          echo 'Checking Docker images'
+          echo '🏷️ Tagging Docker image with latest tag'
+          docker tag ${{ env.IMAGE_NAME }}:build ${{ env.IMAGE_NAME }}:latest
+          echo '🔌Pushing Docker image with latest tag'
+          docker push ${{ env.IMAGE_NAME }}:latest
+          echo '🔎 Checking Docker images'
           docker images --all --format table
 
       - name: 🔌 Publish :latest Docker image to Docker Hub
