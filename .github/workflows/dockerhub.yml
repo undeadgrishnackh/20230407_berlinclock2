@@ -9,6 +9,7 @@ on:
 env:
   IMAGE_NAME: undeadgrishnackh/berlin_clock
   PLATFORMS: linux/amd64,linux/arm64
+  DOCKERHUB_USERNAME: undeadgrishnackh
 
 
 jobs:
@@ -86,9 +87,9 @@ jobs:
       - name: 🏷️ Tag Docker image
         run: |
           echo 'Tagging Docker image with latest tag'
-          docker tag ${{ env.IMAGE_NAME }}:build ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker tag ${{ env.IMAGE_NAME }}:build ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
           echo 'Pushing Docker image with latest tag'
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
           echo 'Checking Docker images'
           docker images --all --format table
 
