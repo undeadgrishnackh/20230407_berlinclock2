@@ -17,7 +17,7 @@ env:
 
 
 jobs:
-  build-and-test:
+  check_out_and_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,7 +44,13 @@ jobs:
           echo '🧪✔️Unit - 🔌❌ Integration - 👩🏻‍💻✔️ E2E test into the Docker multi stage test image'
           echo '💸 the integration test phase on the random port fails so far....'
           docker build -t ${{ env.IMAGE_NAME }}:test --target test -f ./Dockerfile.test .
+  
 
+  quality_gate:
+    needs: [check_out_and_test]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: 🚓 Gate - Hadolint
         run: |
           echo '🕵️‍♂️ Hadolint'
@@ -61,6 +67,11 @@ jobs:
           echo "📁 run DockerFile structure test..."
           inspec exec tests/release/inspec/dockerfile
 
+  build_tmp_image:
+    runs-on: ubuntu-latest
+    needs: [quality_gate]
+
+    steps:
       - name: ⚙️ Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -76,6 +87,11 @@ jobs:
           echo '🏗️ buildx build of ${{ env.IMAGE_NAME }}:build on ${{ env.PLATFORMS }}'
           docker buildx build --progress=plain --platform=${{ env.PLATFORMS }} --tag ${{ env.IMAGE_NAME }}:build -f Dockerfile . --push --no-cache
 
+  quality_gate_image_container_structure:
+    needs: [build_tmp_image]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: 🚓 Gate - Google Container Structure Tests on the build image
         run: |
           echo "🧪 🧬 Container Structure Test"
@@ -86,6 +102,11 @@ jobs:
           echo "📁 run container structure test on ${{ env.IMAGE_NAME }}:build"
           container-structure-test test --config tests/release/container-structure/components.yaml --output text --pull --image ${{ env.IMAGE_NAME }}:build
 
+  quality_gate_image_efficiency:
+    needs: [build_tmp_image]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: 🚓 Check - Dive for image layers and efficiency
         run: |
           echo '💿 Get Dive version ${{ env.DIVE_VERSION }}'
@@ -95,6 +116,11 @@ jobs:
           echo "📁 run dive on ${{ env.IMAGE_NAME }}:build"
           CI=true dive ${{ env.IMAGE_NAME }}:build
 
+  quality_gate_image_grype_vulnerability_scan:
+    needs: [ build_tmp_image ]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: 🚓 Check - Anchor Grype - Vulnerability scanner
         run: |
           echo "🔌 Installation Anchore/Grype"
@@ -104,6 +130,11 @@ jobs:
           echo "👉 Run Grype scan"
           grype ${{ env.IMAGE_NAME }}:build --scope all-layers --fail-on high | tee ./report/grype-scan-report.txt
 
+  quality_gate_image_clair_vulnerability_scan:
+    needs: [build_tmp_image]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: 🚓 Check - Image scan by Clair
         run: |
           echo "🔌 Download the latest clair-scanner version"
@@ -129,6 +160,11 @@ jobs:
           docker rm clair-db
           docker image rm ${{ env.CLAIR_DB }}
 
+  quality_gate_image_trivy_vulnerability_scan:
+    needs: [build_tmp_image]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: 🚓 Check - Trivy - Vulnerability scanner
         run: |
           echo "🔌 Installation Trivy"
@@ -140,6 +176,11 @@ jobs:
           echo "👉 run trivy image -s HIGH,CRITICAL {{ env.IMAGE_NAME }}:build"
           trivy image -s HIGH,CRITICAL ${{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt
 
+  versions_catalogue_and_publish:
+    needs: [quality_gate_image_trivy_vulnerability_scan, quality_gate_image_clair_vulnerability_scan, quality_gate_image_grype_vulnerability_scan, quality_gate_image_efficiency, quality_gate_image_structure_test]
+    runs-on: ubuntu-latest
+
+    steps:
       - name: 🚓 Check - Anchor Syft - Version Catalogue
         run: |
           echo "🔌 Installation Anchore/Syft"
