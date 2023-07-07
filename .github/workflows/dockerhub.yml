@@ -41,7 +41,6 @@ jobs:
   
 
   quality_gate:
-    needs: [check_out_and_test]
     runs-on: ubuntu-latest
 
     steps:
