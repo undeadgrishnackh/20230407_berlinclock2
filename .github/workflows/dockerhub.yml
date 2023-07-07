@@ -11,6 +11,9 @@ env:
   PLATFORMS: linux/amd64,linux/arm64
   DOCKERHUB_USERNAME: undeadgrishnackh
   DIVE_VERSION: 0.10.0
+  CLAIR_DB: arminc/clair-db:latest
+  CLAIR_SCAN: arminc/clair-local-scan
+  CLAIR_VERSION: v12
 
 
 jobs:
@@ -47,7 +50,7 @@ jobs:
           echo '🕵️‍♂️ Hadolint'
           docker run --rm -i -v ${{ github.workspace }}/.hadolint.yaml:/.config/hadolint.yaml hadolint/hadolint < Dockerfile
 
-      - name: 🚓 Gate - Chef InSpec
+      - name: 🚓 Gate - Chef InSpec test to check DockerFile key configuration wasn't changed by mistake
         run: |
           echo "🧪 🐳 DockerFile structure"
           echo "🔌 Installation Inspec.io"
@@ -73,7 +76,7 @@ jobs:
           echo '🏗️ buildx build of ${{ env.IMAGE_NAME }}:build on ${{ env.PLATFORMS }}'
           docker buildx build --progress=plain --platform=${{ env.PLATFORMS }} --tag ${{ env.IMAGE_NAME }}:build -f Dockerfile . --push --no-cache
 
-      - name: 🚓 Gate - Google Container Structure Tests
+      - name: 🚓 Gate - Google Container Structure Tests on the build image
         run: |
           echo "🧪 🧬 Container Structure Test"
           echo "🔌 Installation Container Structure Test"
@@ -83,7 +86,7 @@ jobs:
           echo "📁 run container structure test on ${{ env.IMAGE_NAME }}:build"
           container-structure-test test --config tests/release/container-structure/components.yaml --output text --pull --image ${{ env.IMAGE_NAME }}:build
 
-      - name: 🚓 Check - Dive
+      - name: 🚓 Check - Dive for image layers and efficiency
         run: |
           echo '💿 Get Dive version ${{ env.DIVE_VERSION }}'
           wget https://github.com/wagoodman/dive/releases/download/v${{ env.DIVE_VERSION }}/dive_${{ env.DIVE_VERSION }}_linux_amd64.deb
@@ -92,7 +95,54 @@ jobs:
           echo "📁 run dive on ${{ env.IMAGE_NAME }}:build"
           CI=true dive ${{ env.IMAGE_NAME }}:build
 
-      - name: 🚓 Check - Anchor Syft - Version Catalouge
+      - name: 🚓 Check - Anchor Grype - Vulnerability scanner
+        run: |
+          echo "🔌 Installation Anchore/Grype"
+          mkdir report
+          echo "🔌 Download and install the latest Anchore Grype version"
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          echo "👉 Run Grype scan"
+          grype {{ env.IMAGE_NAME }}:build --scope all-layers --fail-on high | tee ./report/grype-scan-report.txt
+
+      - name: 🚓 Check - Image scan by Clair
+        run: |
+          mkdir report
+          echo "🔌 Download the latest clair-scanner version"
+          wget --no-verbose https://github.com/arminc/clair-scanner/releases/download/{{ env.CLAIR_VERSION }}/clair-scanner_linux_amd64
+          echo "📀 Install clair-scanner"
+          mv ./clair-scanner_linux_amd64 ./clair-scanner
+          chmod +x ./clair-scanner
+          echo "👉 Run {{ env.CLAIR_DB }}"
+          docker run -d --name clair-db {{ env.CLAIR_DB }}
+          echo "👉 Run {{ env.CLAIR_SCAN }}"
+          docker run -p 6060:6060 --link clair-db:postgres -d --name clair {{ env.CLAIR_SCAN }}
+          echo "ℹ️ getting MY_IP"
+          MY_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
+          sleep 10
+          echo "ℹ️ getting CLAIR_IP"
+          CLAIR_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
+          echo "👉 run clair-scanner on $MY_IP pointing http://$CLAIR_IP:6060"
+          ./clair-scanner --ip $MY_IP --clair http://$CLAIR_IP:6060 -t High --reportAll=false {{ env.IMAGE_NAME }}:build | tee ./report/clair-image-scan-report.txt
+          echo "🧹 clean up"
+          docker stop clair
+          docker rm clair
+          docker stop clair-db
+          docker rm clair-db
+          docker image rm {{ env.CLAIR_DB }}
+
+      - name: 🚓 Check - Trivy - Vulnerability scanner
+        run: |
+          mkdir report
+          echo "🔌 Installation Trivy"
+          sudo apt-get install wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+          sudo apt-get update
+          sudo apt-get install trivy
+          echo "👉 run trivy image -s HIGH,CRITICAL {{ env.IMAGE_NAME }}:build"
+          trivy image -s HIGH,CRITICAL {{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt
+
+      - name: 🚓 Check - Anchor Syft - Version Catalogue
         run: |
           echo "🔌 Installation Anchore/Syft"
           curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
