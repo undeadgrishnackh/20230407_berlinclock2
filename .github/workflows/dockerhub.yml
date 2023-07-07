@@ -148,6 +148,7 @@ jobs:
 
       - name: 🚓 Check - Anchor Grype - Vulnerability scanner
         run: |
+          mkdir ./report
           echo "🔌 Installation Anchore/Grype"
           mkdir report
           echo "🔌 Download and install the latest Anchore Grype version"
@@ -165,6 +166,7 @@ jobs:
 
       - name: 🚓 Check - Image scan by Clair
         run: |
+          mkdir ./report
           echo "🔌 Download the latest clair-scanner version"
           wget --no-verbose https://github.com/arminc/clair-scanner/releases/download/${{ env.CLAIR_VERSION }}/clair-scanner_linux_amd64
           echo "📀 Install clair-scanner"
@@ -200,6 +202,7 @@ jobs:
 
       - name: 🚓 Check - Trivy - Vulnerability scanner
         run: |
+          mkdir ./report
           echo "🔌 Installation Trivy"
           sudo apt-get install wget apt-transport-https gnupg lsb-release
           wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
@@ -207,7 +210,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
           echo "👉 run trivy image -s HIGH,CRITICAL {{ env.IMAGE_NAME }}:build"
-          trivy image -s HIGH,CRITICAL ${{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt || true
+          trivy image -s HIGH,CRITICAL ${{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt
 
   versions_catalogue_and_publish:
     needs: [check_out_and_test, quality_gate_image_trivy_vulnerability_scan, quality_gate_image_clair_vulnerability_scan, quality_gate_image_grype_vulnerability_scan, quality_gate_image_efficiency, quality_gate_image_container_structure]
