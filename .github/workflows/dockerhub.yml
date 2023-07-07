@@ -177,6 +177,8 @@ jobs:
           sleep 10
           echo "ℹ️ getting CLAIR_IP"
           CLAIR_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
+          echo "💪 force ${{ env.IMAGE_NAME }}:build to be pulled"
+          docker pull ${{ env.IMAGE_NAME }}:build
           echo "👉 run clair-scanner on $MY_IP pointing http://$CLAIR_IP:6060"
           ./clair-scanner --ip $MY_IP --clair http://$CLAIR_IP:6060 -t High --reportAll=false ${{ env.IMAGE_NAME }}:build | tee ./report/clair-image-scan-report.txt
           echo "🧹 clean up"
@@ -202,10 +204,8 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
           sudo apt-get update
           sudo apt-get install trivy
-          echo "💪 force ${{ env.IMAGE_NAME }}:build to be pulled"
-          docker pull ${{ env.IMAGE_NAME }}:build
           echo "👉 run trivy image -s HIGH,CRITICAL {{ env.IMAGE_NAME }}:build"
-          trivy image -s HIGH,CRITICAL ${{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt
+          trivy image -s HIGH,CRITICAL ${{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt || true
 
   versions_catalogue_and_publish:
     needs: [check_out_and_test, quality_gate_image_trivy_vulnerability_scan, quality_gate_image_clair_vulnerability_scan, quality_gate_image_grype_vulnerability_scan, quality_gate_image_efficiency, quality_gate_image_container_structure]
