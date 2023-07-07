@@ -239,7 +239,10 @@ jobs:
 
       - name: 🏷️ Tag Docker image LATEST
         run: |
+          echo '🔑 login to Docker Hub'
           docker login
+          echo "💪 force ${{ env.IMAGE_NAME }}:build to be pulled"
+          docker pull ${{ env.IMAGE_NAME }}:build
           echo '🔎 Checking Docker images'
           docker images --all --format table
           echo '🏷️ Tagging Docker image with latest tag'
