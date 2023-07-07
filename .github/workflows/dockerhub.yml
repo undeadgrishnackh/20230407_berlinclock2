@@ -106,7 +106,6 @@ jobs:
 
       - name: 🚓 Check - Image scan by Clair
         run: |
-          mkdir report
           echo "🔌 Download the latest clair-scanner version"
           wget --no-verbose https://github.com/arminc/clair-scanner/releases/download/{{ env.CLAIR_VERSION }}/clair-scanner_linux_amd64
           echo "📀 Install clair-scanner"
@@ -132,7 +131,6 @@ jobs:
 
       - name: 🚓 Check - Trivy - Vulnerability scanner
         run: |
-          mkdir report
           echo "🔌 Installation Trivy"
           sudo apt-get install wget apt-transport-https gnupg lsb-release
           wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
