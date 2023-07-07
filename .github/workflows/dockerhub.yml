@@ -24,12 +24,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: 🔐 Login to Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
       - name: 🔒Generate Lock File for dependencies
         run: |
           echo '🏗️ install and upgrade pip'
@@ -47,10 +41,12 @@ jobs:
   
 
   quality_gate:
-    needs: [check_out_and_test]
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: 🚓 Gate - Hadolint
         run: |
           echo '🕵️‍♂️ Hadolint'
@@ -72,6 +68,15 @@ jobs:
     needs: [quality_gate]
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: 🔐 Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: ⚙️ Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -92,6 +97,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: 🚓 Gate - Google Container Structure Tests on the build image
         run: |
           echo "🧪 🧬 Container Structure Test"
@@ -107,6 +115,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: 🚓 Check - Dive for image layers and efficiency
         run: |
           echo '💿 Get Dive version ${{ env.DIVE_VERSION }}'
@@ -121,6 +132,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: 🚓 Check - Anchor Grype - Vulnerability scanner
         run: |
           echo "🔌 Installation Anchore/Grype"
@@ -135,6 +149,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: 🚓 Check - Image scan by Clair
         run: |
           echo "🔌 Download the latest clair-scanner version"
@@ -165,6 +182,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: 🚓 Check - Trivy - Vulnerability scanner
         run: |
           echo "🔌 Installation Trivy"
@@ -181,6 +201,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
       - name: 🚓 Check - Anchor Syft - Version Catalogue
         run: |
           echo "🔌 Installation Anchore/Syft"
