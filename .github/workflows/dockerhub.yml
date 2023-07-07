@@ -150,7 +150,6 @@ jobs:
         run: |
           mkdir ./report
           echo "🔌 Installation Anchore/Grype"
-          mkdir report
           echo "🔌 Download and install the latest Anchore Grype version"
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
           echo "👉 Run Grype scan"
