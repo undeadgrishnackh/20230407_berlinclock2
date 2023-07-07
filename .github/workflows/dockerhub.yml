@@ -89,8 +89,10 @@ jobs:
           python -m pip install --upgrade pip
           echo '🏗️ pipenv local virtual env installation'
           pip install pipenv
+          echo '💪 force PIPENV_DEV to false'
+          export PIPENV_DEV=false
           echo '🏗️ lock the PipFile.lock with the latest dependencies -- NO DEV DEPENDENCIES!'
-          pipenv lock --categories packages
+          pipenv lock --categories packages --clear
 
       - name: ⚙️ Build Docker image
         run: |
