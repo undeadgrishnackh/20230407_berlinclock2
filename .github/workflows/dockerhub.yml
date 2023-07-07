@@ -177,7 +177,7 @@ jobs:
           trivy image -s HIGH,CRITICAL ${{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt
 
   versions_catalogue_and_publish:
-    needs: [quality_gate_image_trivy_vulnerability_scan, quality_gate_image_clair_vulnerability_scan, quality_gate_image_grype_vulnerability_scan, quality_gate_image_efficiency, quality_gate_image_structure_test]
+    needs: [quality_gate_image_trivy_vulnerability_scan, quality_gate_image_clair_vulnerability_scan, quality_gate_image_grype_vulnerability_scan, quality_gate_image_efficiency, quality_gate_image_container_structure]
     runs-on: ubuntu-latest
 
     steps:
