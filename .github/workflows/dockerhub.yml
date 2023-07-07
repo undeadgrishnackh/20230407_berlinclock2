@@ -89,8 +89,8 @@ jobs:
           python -m pip install --upgrade pip
           echo '🏗️ pipenv local virtual env installation'
           pip install pipenv
-          echo '🏗️ lock the PipFile.lock with the latest dependencies'
-          pipenv lock
+          echo '🏗️ lock the PipFile.lock with the latest dependencies -- NO DEV DEPENDENCIES!'
+          pipenv lock --categories packages
 
       - name: ⚙️ Build Docker image
         run: |
@@ -202,6 +202,8 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
           sudo apt-get update
           sudo apt-get install trivy
+          echo "💪 force ${{ env.IMAGE_NAME }}:build to be pulled"
+          docker pull ${{ env.IMAGE_NAME }}:build
           echo "👉 run trivy image -s HIGH,CRITICAL {{ env.IMAGE_NAME }}:build"
           trivy image -s HIGH,CRITICAL ${{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt
 
