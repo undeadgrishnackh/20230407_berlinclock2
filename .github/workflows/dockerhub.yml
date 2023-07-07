@@ -102,32 +102,32 @@ jobs:
           echo "🔌 Download and install the latest Anchore Grype version"
           curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
           echo "👉 Run Grype scan"
-          grype {{ env.IMAGE_NAME }}:build --scope all-layers --fail-on high | tee ./report/grype-scan-report.txt
+          grype ${{ env.IMAGE_NAME }}:build --scope all-layers --fail-on high | tee ./report/grype-scan-report.txt
 
       - name: 🚓 Check - Image scan by Clair
         run: |
           echo "🔌 Download the latest clair-scanner version"
-          wget --no-verbose https://github.com/arminc/clair-scanner/releases/download/{{ env.CLAIR_VERSION }}/clair-scanner_linux_amd64
+          wget --no-verbose https://github.com/arminc/clair-scanner/releases/download/${{ env.CLAIR_VERSION }}/clair-scanner_linux_amd64
           echo "📀 Install clair-scanner"
           mv ./clair-scanner_linux_amd64 ./clair-scanner
           chmod +x ./clair-scanner
-          echo "👉 Run {{ env.CLAIR_DB }}"
-          docker run -d --name clair-db {{ env.CLAIR_DB }}
-          echo "👉 Run {{ env.CLAIR_SCAN }}"
-          docker run -p 6060:6060 --link clair-db:postgres -d --name clair {{ env.CLAIR_SCAN }}
+          echo "👉 Run ${{ env.CLAIR_DB }}"
+          docker run -d --name clair-db ${{ env.CLAIR_DB }}
+          echo "👉 Run ${{ env.CLAIR_SCAN }}"
+          docker run -p 6060:6060 --link clair-db:postgres -d --name clair ${{ env.CLAIR_SCAN }}
           echo "ℹ️ getting MY_IP"
           MY_IP=$(ifconfig eth0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')
           sleep 10
           echo "ℹ️ getting CLAIR_IP"
           CLAIR_IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' clair)
           echo "👉 run clair-scanner on $MY_IP pointing http://$CLAIR_IP:6060"
-          ./clair-scanner --ip $MY_IP --clair http://$CLAIR_IP:6060 -t High --reportAll=false {{ env.IMAGE_NAME }}:build | tee ./report/clair-image-scan-report.txt
+          ./clair-scanner --ip $MY_IP --clair http://$CLAIR_IP:6060 -t High --reportAll=false ${{ env.IMAGE_NAME }}:build | tee ./report/clair-image-scan-report.txt
           echo "🧹 clean up"
           docker stop clair
           docker rm clair
           docker stop clair-db
           docker rm clair-db
-          docker image rm {{ env.CLAIR_DB }}
+          docker image rm ${{ env.CLAIR_DB }}
 
       - name: 🚓 Check - Trivy - Vulnerability scanner
         run: |
@@ -138,7 +138,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install trivy
           echo "👉 run trivy image -s HIGH,CRITICAL {{ env.IMAGE_NAME }}:build"
-          trivy image -s HIGH,CRITICAL {{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt
+          trivy image -s HIGH,CRITICAL ${{ env.IMAGE_NAME }}:build | tee ./report/trivy-image-scan-report.txt
 
       - name: 🚓 Check - Anchor Syft - Version Catalogue
         run: |
