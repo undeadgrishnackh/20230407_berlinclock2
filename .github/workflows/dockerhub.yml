@@ -61,7 +61,7 @@ jobs:
           echo '🔌 install inspec'
           curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
           echo "📁 run DockerFile structure test..."
-          inspec exec tests/release/inspec/dockerfile
+          inspec --chef-license=accept-silent exec tests/release/inspec/dockerfile
 
   build_tmp_image:
     runs-on: ubuntu-latest

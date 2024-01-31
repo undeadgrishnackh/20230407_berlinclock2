@@ -39,6 +39,7 @@ inquirer = "*"
 fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 responses = "*"
+urllib3 = "*"
 
 [requires]
 python_version = "3"
