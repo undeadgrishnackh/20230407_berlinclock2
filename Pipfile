@@ -2,7 +2,6 @@
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
-
 #[[source]]
 #url = "https://www.piwheels.org/simple"
 #verify_ssl = true
@@ -39,6 +38,7 @@ update = "*"
 inquirer = "*"
 fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
+responses = "*"
 
 [requires]
 python_version = "3"

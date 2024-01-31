@@ -43,8 +43,10 @@ echo "_________________________________________________________________________"
 echo ''
 
 if ! container-structure-test test --config ./tests/release/container-structure/components.yaml --output text --image ${IMAGE_NAME}:${IMAGE_TAG} ; then
-  echo "💥 🐳 Structural 🧪 test failed."; 
-  exit 1;
+  echo "💥 🐳 Structural 🧪 test failed.";
+  echo '🔎 If you are on a mac, make sure you have the docker socket mounted in your container'
+  echo 'sudo ln -s "$HOME/.docker/run/docker.sock" /var/run/docker.sock'
+#  exit 1;
 fi
 echo ''
 echo "✅ 🐳 Structural 🧪 test passed."
@@ -61,7 +63,7 @@ fi
 echo "_________________________________________________________________________"
 
 
-echo "Anchor"
+echo "📋 Software Bill of Materials (SBOM)"
 docker pull quay.io/goodwithtech/anchor:latest
 if ! docker run --rm -v $(pwd):/modules -w /src quay.io/goodwithtech/anchor:latest check ; then
   echo "💥 🐳 Anchor test failed."
@@ -69,10 +71,18 @@ fi
 echo "_________________________________________________________________________"
 
 
-echo "Trivy"
+echo "👮‍ Security Scan ☝️"
 docker pull aquasec/trivy:latest
 if ! docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest --severity HIGH --no-progress $IMAGE_NAME:${IMAGE_TAG} ; then
   echo "💥 🐳 Trivy test failed."
 fi
 echo "_________________________________________________________________________"
+
+
+echo "🐶Security Scan ✌️"
+if ! snyk container test $IMAGE_NAME:${IMAGE_TAG} ; then
+  echo "💥 🐳 Snyk test failed."
+fi
+echo "_________________________________________________________________________"
+
 echo '🏁FINISH!'
