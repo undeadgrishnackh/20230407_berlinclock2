@@ -32,7 +32,7 @@ jobs:
 
     - name: Analyze with SonarCloud
 
-      uses: SonarSource/sonarcloud-github-action@v1.9.1  # version at https://github.com/marketplace/actions/sonarcloud-scan?version=v1.9.1
+      uses: SonarSource/sonarcloud-github-action@v2.1.1  # version at https://github.com/marketplace/actions/sonarcloud-scan?version=v1.9.1
 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
