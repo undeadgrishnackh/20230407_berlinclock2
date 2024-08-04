@@ -1,4 +1,4 @@
-FROM python:3.13.0a3-slim
+FROM python:3.13.0b4-slim
 
 ARG PORT_DEFAULT=8000
 ENV PORT=$PORT_DEFAULT
